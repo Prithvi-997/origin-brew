@@ -1,21 +1,21 @@
 {
   "layout1.svg": {
     "name": "layout1.svg",
-    "frameCount": 2,
+    "frameCount": 7,
     "orientation": "mixed",
-    "description": "Two photo layout with rectangular frames"
+    "description": "Seven photo complex collage layout"
   },
   "layout2.svg": {
     "name": "layout2.svg",
-    "frameCount": 3,
+    "frameCount": 4,
     "orientation": "mixed",
-    "description": "Three photo layout"
+    "description": "Four photo scrapbook layout"
   },
   "layout3.svg": {
     "name": "layout3.svg",
-    "frameCount": 4,
+    "frameCount": 3,
     "orientation": "mixed",
-    "description": "Four photo grid layout"
+    "description": "Three photo layout with wide bottom"
   },
   "layout4.svg": {
     "name": "layout4.svg",
@@ -27,36 +27,36 @@
     "name": "layout5.svg",
     "frameCount": 3,
     "orientation": "landscape",
-    "description": "Three horizontal photo layout"
+    "description": "Three photo layout: large left, two squares right"
   },
   "layout6.svg": {
     "name": "layout6.svg",
-    "frameCount": 6,
+    "frameCount": 4,
     "orientation": "mixed",
-    "description": "Six photo collage layout"
+    "description": "Four photo grid layout"
   },
   "layout7.svg": {
     "name": "layout7.svg",
     "frameCount": 4,
     "orientation": "portrait",
-    "description": "Four portrait photo layout"
+    "description": "Four photo portrait layout"
   },
   "layout8.svg": {
     "name": "layout8.svg",
     "frameCount": 5,
     "orientation": "mixed",
-    "description": "Five photo creative layout"
+    "description": "Five photo creative layout with wide middle"
   },
   "layout9.svg": {
     "name": "layout9.svg",
-    "frameCount": 7,
+    "frameCount": 5,
     "orientation": "mixed",
-    "description": "Seven photo elaborate layout"
+    "description": "Five photo asymmetric layout"
   },
   "layout10.svg": {
     "name": "layout10.svg",
     "frameCount": 4,
     "orientation": "square",
-    "description": "Four square photo layout"
+    "description": "Four photo square grid layout"
   }
 }
