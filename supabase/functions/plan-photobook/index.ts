@@ -22,41 +22,47 @@ serve(async (req) => {
     console.log(`Planning photobook for ${photos.length} photos with ${Object.keys(layouts).length} layouts`);
 
     // Build prompt for AI
-    const systemPrompt = `You are a professional magazine-quality photobook designer. Create stunning, visually impactful layouts that tell a story.
+    const systemPrompt = `You are an expert photobook designer with deep knowledge of visual composition, storytelling, and layout design. Your task is to create a beautiful, well-balanced photobook that tells a compelling visual story.
 
-Available Layouts:
+Available layouts and their characteristics:
 ${JSON.stringify(layouts, null, 2)}
 
-Images to arrange:
+Photos to arrange (with orientation, aspect ratio, and priority):
 ${JSON.stringify(photos, null, 2)}
 
-DESIGN PRINCIPLES:
-1. **Visual Hierarchy & Impact**:
-   - Create hero moments: Use large frames for the most striking images
-   - Balance bold statements with supporting details
-   - Vary frame sizes to create dynamic rhythm across pages
+CRITICAL DESIGN PRINCIPLES:
 
-2. **Orientation Matching** (Critical):
-   - Portrait images → Tall/vertical frames (prioritize layouts with portrait orientation)
-   - Landscape images → Wide/horizontal frames (prioritize landscape layouts)
-   - Square images → Flexible placement
+1. PHOTO-TO-FRAME MATCHING (Highest Priority):
+   - Match portrait photos (aspectRatio < 0.85) to portrait frames (aspect_ratio < 0.9)
+   - Match landscape photos (aspectRatio > 1.25) to landscape frames (aspect_ratio > 1.2)
+   - Match square photos (0.85-1.15) to square frames (0.9-1.1)
+   - Prioritize close aspect ratio matches (within 0.2 difference is ideal)
+   - High-priority photos deserve prominent placement (larger frames or hero layouts like singlephoto.svg)
 
-3. **Page Flow & Storytelling**:
-   - Alternate between dense and spacious layouts for visual breathing room
-   - Create narrative progression across pages
-   - Consider left-right page relationships in book view
+2. LAYOUT DIVERSITY & RHYTHM:
+   - Create visual rhythm: busy multi-photo page → calm single-photo page → busy page
+   - NEVER use the same layout more than 2 times consecutively
+   - Vary between dense layouts (6+ photos) and spacious layouts (1-3 photos)
+   - Use single-photo layouts (singlephoto.svg) for the highest priority images
+   - Rotate through different frame counts (3, 4, 5, 6 photos per page)
 
-4. **Professional Composition**:
-   - Use whitespace strategically (empty frames can enhance design)
-   - Balance visual weight across left and right pages
-   - Create intentional focal points on each page
+3. VISUAL STORYTELLING:
+   - Group related photos by orientation patterns (all portraits, all landscapes, mixed)
+   - Create breathing room - follow dense pages with simpler layouts
+   - Place hero images (highest priority) at strategic points (opening, middle, closing pages)
+   - Consider visual weight distribution across facing pages in a book spread
 
-5. **Technical Requirements**:
-   - Use each image exactly once (no duplicates)
-   - frame_number starts at 1 and goes up to frameCount
-   - Distribute images thoughtfully (quality over quantity)
+4. TECHNICAL REQUIREMENTS:
+   - Every photo must be used exactly once
+   - Fill all frames in each chosen layout
+   - Ensure frame count matches available photos for each page
 
-GOAL: Create a magazine-quality photobook with professional visual flow, strong focal points, and balanced composition.`;
+5. QUALITY OVER QUANTITY:
+   - Prioritize perfect aspect ratio matches over using a specific layout
+   - If a photo doesn't fit well in any frame on a page, choose a different layout
+   - Aim for <0.15 aspect ratio difference between photo and frame when possible
+
+Your response should use the create_photobook_plan function to return a complete, optimized plan that creates a visually stunning photobook.`;
 
     // Call Lovable AI with tool calling for structured output
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

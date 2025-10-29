@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Grid3x3, BookOpen } from "lucide-react";
+import { ArrowLeft, Grid3x3, BookOpen, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Album as AlbumType, AlbumPage } from "@/lib/types";
 import { generateAlbumPages, generateAlbumPagesWithAI } from "@/lib/layoutGenerator";
 import SinglePageView from "@/components/album/SinglePageView";
 import BookView from "@/components/album/BookView";
 import Header from "@/components/Header";
+import EditMode from "@/components/album/EditMode";
 import { toast } from "sonner";
 
 type ViewMode = 'single' | 'book';
@@ -18,6 +19,7 @@ const Album = () => {
   const [pages, setPages] = useState<AlbumPage[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('single');
   const [currentPage, setCurrentPage] = useState(0);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     const loadAlbum = async () => {
@@ -81,9 +83,40 @@ const Album = () => {
     return [pages[currentPage]];
   };
 
+  const handleSaveEdit = (updatedPages: AlbumPage[]) => {
+    setPages(updatedPages);
+    if (album) {
+      const updatedAlbum = {
+        ...album,
+        pages: updatedPages,
+        lastModified: new Date(),
+      };
+      localStorage.setItem(`album-${albumId}`, JSON.stringify(updatedAlbum));
+      setAlbum(updatedAlbum);
+    }
+    setIsEditMode(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+    toast.info('Edit cancelled');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      
+      {isEditMode && (
+        <EditMode
+          pages={pages}
+          photos={album?.photos || []}
+          currentPage={currentPage}
+          onPagesChange={setPages}
+          onCurrentPageChange={setCurrentPage}
+          onSave={handleSaveEdit}
+          onCancel={handleCancelEdit}
+        />
+      )}
       
       {/* Top Bar */}
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -110,7 +143,7 @@ const Album = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className={`container mx-auto px-6 py-8 ${isEditMode ? 'pb-32' : ''}`}>
         {/* View Mode Content */}
         <div className="mb-8">
           {viewMode === 'single' ? (
@@ -121,49 +154,63 @@ const Album = () => {
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentPage === 0}
-          >
-            Previous
-          </Button>
-          
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage + 1} {viewMode === 'book' && currentPage + 1 < totalPages && `- ${currentPage + 2}`} of {totalPages}
-          </span>
-          
-          <Button
-            variant="outline"
-            onClick={handleNext}
-            disabled={currentPage >= maxPageIndex}
-          >
-            Next
-          </Button>
-        </div>
+        {!isEditMode && (
+          <div className="flex items-center justify-center gap-4">
+            <Button
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+            
+            <span className="text-sm text-muted-foreground">
+              Page {currentPage + 1} {viewMode === 'book' && currentPage + 1 < totalPages && `- ${currentPage + 2}`} of {totalPages}
+            </span>
+            
+            <Button
+              variant="outline"
+              onClick={handleNext}
+              disabled={currentPage >= maxPageIndex}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* Floating View Toggle */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <Button
-          size="lg"
-          onClick={() => setViewMode(prev => prev === 'single' ? 'book' : 'single')}
-          className="rounded-full shadow-lg"
-        >
-          {viewMode === 'single' ? (
-            <>
-              <BookOpen className="mr-2 h-5 w-5" />
-              Book View
-            </>
-          ) : (
-            <>
-              <Grid3x3 className="mr-2 h-5 w-5" />
-              Single View
-            </>
-          )}
-        </Button>
-      </div>
+      {/* Floating Action Buttons */}
+      {!isEditMode && (
+        <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-3">
+          <Button
+            size="lg"
+            onClick={() => setIsEditMode(true)}
+            className="rounded-full shadow-lg"
+          >
+            <Pencil className="mr-2 h-5 w-5" />
+            Edit
+          </Button>
+          
+          <Button
+            size="lg"
+            variant="secondary"
+            onClick={() => setViewMode(prev => prev === 'single' ? 'book' : 'single')}
+            className="rounded-full shadow-lg"
+          >
+            {viewMode === 'single' ? (
+              <>
+                <BookOpen className="mr-2 h-5 w-5" />
+                Book View
+              </>
+            ) : (
+              <>
+                <Grid3x3 className="mr-2 h-5 w-5" />
+                Single View
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

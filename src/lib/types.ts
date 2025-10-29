@@ -6,6 +6,7 @@ export interface Photo {
   height?: number;
   aspectRatio?: number;
   orientation?: 'landscape' | 'portrait' | 'square';
+  priority?: number; // For AI to determine hero images
 }
 
 export interface Album {
@@ -15,6 +16,9 @@ export interface Album {
   photos: Photo[];
   pages: AlbumPage[];
   createdAt: Date;
+  editHistory?: EditHistoryEntry[];
+  lastModified?: Date;
+  version?: number;
 }
 
 export interface AlbumPage {
@@ -22,6 +26,7 @@ export interface AlbumPage {
   pageNumber: number;
   svgContent: string;
   layoutName: string;
+  photoIds: string[]; // Track which photos are on this page
 }
 
 export interface LayoutMetadata {
@@ -29,6 +34,8 @@ export interface LayoutMetadata {
   frameCount: number;
   orientation: string;
   description: string;
+  priority?: 'high' | 'medium' | 'low';
+  visualImpact?: 'dramatic' | 'balanced' | 'subtle';
 }
 
 export interface AILayoutPlan {
@@ -45,4 +52,23 @@ export interface PhotoMetadata {
   id: string;
   orientation: 'landscape' | 'portrait' | 'square';
   aspectRatio: number;
+}
+
+export interface EditHistoryEntry {
+  id: string;
+  timestamp: Date;
+  operation: 'swap_photos' | 'change_layout' | 'reorder_pages' | 'delete_page' | 'add_page';
+  pageIndex?: number;
+  details: any;
+}
+
+export interface DraggedPhoto {
+  photoId: string;
+  sourcePageIndex: number;
+  sourceFrameIndex: number;
+}
+
+export interface LayoutFrame {
+  id: string;
+  aspect_ratio: number;
 }

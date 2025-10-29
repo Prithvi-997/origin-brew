@@ -143,11 +143,14 @@ export async function generateAlbumPagesWithAI(photos: Photo[]): Promise<AlbumPa
       svgContent = uniquifySVGIds(svgContent, `page${pageIndex}`);
       svgContent = injectImagesIntoSVG(svgContent, photoAssignments, photosMap);
 
+      const photoIds = validFrames.map(frame => frame.image_id);
+      
       pages.push({
         id: `page-${pageIndex}`,
         pageNumber: pageIndex,
         svgContent,
         layoutName: chosenLayoutName,
+        photoIds,
       });
     });
 
@@ -204,11 +207,14 @@ export function generateAlbumPages(photos: Photo[]): AlbumPage[] {
     svgContent = uniquifySVGIds(svgContent, `page${pageNumber}`);
     svgContent = injectImagesIntoSVG(svgContent, photoAssignments, photosMap);
 
+    const photoIds = photoAssignments.map(a => a.photoId);
+    
     pages.push({
       id: `page-${pageNumber}`,
       pageNumber,
       svgContent,
-      layoutName
+      layoutName,
+      photoIds,
     });
 
     photoIndex += photosForPage;
