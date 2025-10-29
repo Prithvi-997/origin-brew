@@ -5,6 +5,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { analyzeImage } from "@/lib/imageAnalysis";
+import { generateAlbumPagesWithAI } from "@/lib/layoutGenerator";
+import { Photo } from "@/lib/types";
 
 const NewAlbum = () => {
   const navigate = useNavigate();
@@ -26,30 +29,47 @@ const NewAlbum = () => {
       const files = (e.target as HTMLInputElement).files;
       if (files && files.length > 0) {
         toast.success(`${files.length} photos uploaded successfully!`);
-        toast.info("Creating your photobook...");
         
-        // Convert files to photo objects with blob URLs
-        const photos = Array.from(files).map((file, index) => ({
-          id: `photo-${Date.now()}-${index}`,
-          url: URL.createObjectURL(file),
-          originalFilename: file.name,
-          file: file // Keep file for potential backend upload later
-        }));
+        try {
+          // Step 1: Analyze images
+          toast.info("Analyzing your photos...");
+          const analyzedPhotos: Photo[] = await Promise.all(
+            Array.from(files).map(async (file, index) => {
+              const analysis = await analyzeImage(file);
+              return {
+                id: `photo-${Date.now()}-${index}`,
+                url: URL.createObjectURL(file),
+                originalFilename: file.name,
+                width: analysis.width,
+                height: analysis.height,
+                aspectRatio: analysis.aspectRatio,
+                orientation: analysis.orientation,
+              };
+            })
+          );
 
-        // Store album data in localStorage for now (will use backend later)
-        const albumId = `album-${Date.now()}`;
-        const albumData = {
-          id: albumId,
-          title,
-          subtitle,
-          photos,
-          createdAt: new Date().toISOString()
-        };
-        
-        localStorage.setItem(`album-${albumId}`, JSON.stringify(albumData));
-        
-        // Navigate to album view
-        navigate(`/album/${albumId}`);
+          // Step 2: Generate pages with AI
+          toast.info("Creating intelligent layouts with AI...");
+          const generatedPages = await generateAlbumPagesWithAI(analyzedPhotos);
+
+          // Step 3: Store and navigate
+          const albumId = `album-${Date.now()}`;
+          const albumData = {
+            id: albumId,
+            title,
+            subtitle,
+            photos: analyzedPhotos,
+            pages: generatedPages,
+            createdAt: new Date().toISOString(),
+          };
+
+          localStorage.setItem(`album-${albumId}`, JSON.stringify(albumData));
+          toast.success("Your photobook is ready!");
+          navigate(`/album/${albumId}`);
+        } catch (error) {
+          console.error('Error creating album:', error);
+          toast.error("Failed to create photobook. Please try again.");
+        }
       }
     };
     input.click();

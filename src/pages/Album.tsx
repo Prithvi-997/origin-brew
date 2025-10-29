@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Grid3x3, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Album as AlbumType, AlbumPage } from "@/lib/types";
-import { generateAlbumPages } from "@/lib/layoutGenerator";
+import { generateAlbumPages, generateAlbumPagesWithAI } from "@/lib/layoutGenerator";
 import SinglePageView from "@/components/album/SinglePageView";
 import BookView from "@/components/album/BookView";
 import Header from "@/components/Header";
@@ -20,26 +20,35 @@ const Album = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
-    if (!albumId) {
-      toast.error("Album not found");
-      navigate("/");
-      return;
-    }
+    const loadAlbum = async () => {
+      if (!albumId) {
+        toast.error("Album not found");
+        navigate("/");
+        return;
+      }
 
-    // Load album from localStorage (will use backend later)
-    const albumData = localStorage.getItem(`album-${albumId}`);
-    if (!albumData) {
-      toast.error("Album not found");
-      navigate("/");
-      return;
-    }
+      // Load album from localStorage (will use backend later)
+      const albumData = localStorage.getItem(`album-${albumId}`);
+      if (!albumData) {
+        toast.error("Album not found");
+        navigate("/");
+        return;
+      }
 
-    const parsedAlbum = JSON.parse(albumData);
-    setAlbum(parsedAlbum);
+      const parsedAlbum = JSON.parse(albumData);
+      setAlbum(parsedAlbum);
 
-    // Generate pages from photos
-    const generatedPages = generateAlbumPages(parsedAlbum.photos);
-    setPages(generatedPages);
+      // Use precomputed pages if available, otherwise regenerate
+      if (parsedAlbum.pages && parsedAlbum.pages.length > 0) {
+        setPages(parsedAlbum.pages);
+      } else {
+        // Fallback: regenerate from photos (shouldn't happen with new flow)
+        const generatedPages = await generateAlbumPagesWithAI(parsedAlbum.photos);
+        setPages(generatedPages);
+      }
+    };
+
+    loadAlbum();
   }, [albumId, navigate]);
 
   if (!album || pages.length === 0) {

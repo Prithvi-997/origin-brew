@@ -30,3 +30,19 @@ export interface LayoutMetadata {
   orientation: string;
   description: string;
 }
+
+export interface AILayoutPlan {
+  pages: Array<{
+    layout_to_use: string;
+    frames: Array<{
+      frame_number: number;
+      image_id: string;
+    }>;
+  }>;
+}
+
+export interface PhotoMetadata {
+  id: string;
+  orientation: 'landscape' | 'portrait' | 'square';
+  aspectRatio: number;
+}

@@ -1,0 +1,4 @@
+project_id = "uexfamnbpzxioxnjvcfs"
+
+[functions.plan-photobook]
+verify_jwt = false
