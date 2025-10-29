@@ -60,16 +60,38 @@ export function injectImagesIntoSVG(
   
   photoAssignments.forEach(assignment => {
     const photo = photosMap.get(assignment.photoId);
-    if (!photo) return;
+    if (!photo) {
+      console.warn(`Photo not found: ${assignment.photoId}`);
+      return;
+    }
     
-    // Find pattern by frame number (patterns are named img1, img2, etc.)
-    const pattern = doc.querySelector(`pattern[id^="img${assignment.frameNumber}"]`);
-    if (!pattern) return;
+    // Try multiple pattern naming conventions
+    // Standard: img1, img2, etc.
+    // Alternative: modern-img-1, frame-1, etc.
+    let pattern = doc.querySelector(`pattern[id^="img${assignment.frameNumber}"]`);
+    
+    // If not found, try with dash separator
+    if (!pattern) {
+      pattern = doc.querySelector(`pattern[id$="-${assignment.frameNumber}"]`);
+    }
+    
+    // If still not found, get all patterns and match by index
+    if (!pattern) {
+      const allPatterns = Array.from(doc.querySelectorAll('pattern'));
+      pattern = allPatterns[assignment.frameNumber - 1];
+    }
+    
+    if (!pattern) {
+      console.warn(`Pattern not found for frame ${assignment.frameNumber}`);
+      return;
+    }
     
     const imageEl = pattern.querySelector('image');
     if (imageEl) {
       imageEl.setAttribute('href', photo.url);
       imageEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', photo.url);
+    } else {
+      console.warn(`No image element in pattern for frame ${assignment.frameNumber}`);
     }
   });
   

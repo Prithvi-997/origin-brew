@@ -2,26 +2,26 @@
 <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w.org/1999/xlink">
   <defs>
     <!-- FRAME 1: Left Portrait Rectangle -->
-    <clipPath id="modern-clip-1">
+    <clipPath id="clip1">
       <path d="M20 20 H245 V480 H20 Z"/>
     </clipPath>
-    <pattern id="modern-img-1" patternUnits="userSpaceOnUse" x="20" y="20" width="225" height="460">
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="20" y="20" width="225" height="460">
       <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="225" height="460" />
     </pattern>
 
     <!-- FRAME 2: Top Right Square -->
-    <clipPath id="modern-clip-2">
+    <clipPath id="clip2">
       <path d="M255 20 H480 V245 H255 Z"/>
     </clipPath>
-    <pattern id="modern-img-2" patternUnits="userSpaceOnUse" x="255" y="20" width="225" height="225">
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="255" y="20" width="225" height="225">
       <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="225" height="225" />
     </pattern>
 
     <!-- FRAME 3: Bottom Right Square -->
-    <clipPath id="modern-clip-3">
+    <clipPath id="clip3">
       <path d="M255 255 H480 V480 H255 Z"/>
     </clipPath>
-    <pattern id="modern-img-3" patternUnits="userSpaceOnUse" x="255" y="255" width="225" height="225">
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="255" y="255" width="225" height="225">
       <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="225" height="225" />
     </pattern>
   </defs>
@@ -35,10 +35,10 @@
   <!-- Photo Frames -->
   <g>
     <!-- Frame 1 -->
-    <path d="M20 20 H245 V480 H20 Z" fill="url(#modern-img-1)" clip-path="url(#modern-clip-1)" data-photo-frame="1" />
+    <path d="M20 20 H245 V480 H20 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
     <!-- Frame 2 -->
-    <path d="M255 20 H480 V245 H255 Z" fill="url(#modern-img-2)" clip-path="url(#modern-clip-2)" data-photo-frame="2" />
+    <path d="M255 20 H480 V245 H255 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
     <!-- Frame 3 -->
-    <path d="M255 255 H480 V480 H255 Z" fill="url(#modern-img-3)" clip-path="url(#modern-clip-3)" data-photo-frame="3" />
+    <path d="M255 255 H480 V480 H255 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
   </g>
 </svg>
