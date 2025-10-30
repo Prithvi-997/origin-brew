@@ -2,7 +2,7 @@ import { Photo } from './types';
 
 /**
  * Determines optimal preserveAspectRatio based on photo-to-frame fit
- * Uses hybrid approach: slice for good matches, meet for mismatches, smart positioning for severe mismatches
+ * Uses aggressive slice approach to fill frames edge-to-edge like professional layouts
  */
 function getOptimalPreserveAspectRatio(
   photoAspect: number,
@@ -10,15 +10,24 @@ function getOptimalPreserveAspectRatio(
 ): string {
   const aspectDiff = Math.abs(photoAspect - frameAspect);
   
-  // Perfect or very close match (< 0.25 difference): use slice for professional look
-  // Slight crop is fine and looks better than letterboxing
-  if (aspectDiff < 0.25) {
+  // Good match (< 0.4 difference): use slice to fill frame completely
+  // Trust AI to place photos in appropriate frames, so this should look good
+  if (aspectDiff < 0.4) {
     return 'xMidYMid slice';
   }
   
-  // Moderate mismatch (0.25-0.4): use meet to show full image
-  // Accept slight letterboxing to preserve all content
-  if (aspectDiff < 0.4) {
+  // Poor match (0.4-0.5): Still use slice but might have some crop
+  // Better to fill frame than show white borders
+  if (aspectDiff < 0.5) {
+    // For orientation matches (both portrait or both landscape), use slice
+    const bothPortrait = photoAspect < 1 && frameAspect < 1;
+    const bothLandscape = photoAspect > 1 && frameAspect > 1;
+    
+    if (bothPortrait || bothLandscape) {
+      return 'xMidYMid slice';
+    }
+    
+    // Orientation mismatch - use meet to avoid extreme cropping
     return 'xMidYMid meet';
   }
   
