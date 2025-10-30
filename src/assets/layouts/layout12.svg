@@ -1,27 +1,27 @@
 <svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
   <defs>
     <!-- Frame 1: Large Left -->
-    <pattern id="img1" patternUnits="userSpaceOnUse" x="25" y="30" width="290" height="350">
-      <image href="" x="0" y="0" width="290" height="350" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="0" y="0" width="315" height="375">
+      <image href="" x="0" y="0" width="315" height="375" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip1">
-      <path d="M25 30 h290 v350 h-290 Z" />
+      <path d="M0 0 h315 v375 h-315 Z" />
     </clipPath>
 
     <!-- Frame 2: Top Right -->
-    <pattern id="img2" patternUnits="userSpaceOnUse" x="320" y="30" width="155" height="208">
-      <image href="" x="0" y="0" width="155" height="208" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="320" y="0" width="180" height="220">
+      <image href="" x="0" y="0" width="180" height="220" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip2">
-      <path d="M320 30 h155 v208 h-155 Z" />
+      <path d="M320 0 h180 v220 h-180 Z" />
     </clipPath>
 
     <!-- Frame 3: Bottom Wide -->
-    <pattern id="img3" patternUnits="userSpaceOnUse" x="25" y="385" width="450" height="185">
-      <image href="" x="0" y="0" width="450" height="185" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="0" y="380" width="500" height="220">
+      <image href="" x="0" y="0" width="500" height="220" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip3">
-      <path d="M25 385 h450 v185 h-450 Z" />
+      <path d="M0 380 h500 v220 h-500 Z" />
     </clipPath>
   </defs>
 
@@ -29,7 +29,7 @@
   <rect width="500" height="600" fill="#f5f5f5" />
 
   <!-- Image frames -->
-  <rect x="25" y="30" width="290" height="350" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
-  <rect x="320" y="30" width="155" height="208" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
-  <rect x="25" y="385" width="450" height="185" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+  <rect x="0" y="0" width="315" height="375" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+  <rect x="320" y="0" width="180" height="220" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+  <rect x="0" y="380" width="500" height="220" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
 </svg>

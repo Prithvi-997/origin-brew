@@ -2,26 +2,26 @@
   <defs>
     <!-- FRAME 1: Left Portrait Rectangle -->
     <clipPath id="clip1">
-      <path d="M15 15 H245 V585 H15 Z"/>
+      <path d="M0 0 H245 V600 H0 Z"/>
     </clipPath>
-    <pattern id="img1" patternUnits="userSpaceOnUse" x="15" y="15" width="230" height="570">
-      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="230" height="570" />
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="0" y="0" width="245" height="600">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="245" height="600" />
     </pattern>
 
     <!-- FRAME 2: Top Right Square -->
     <clipPath id="clip2">
-      <path d="M250 15 H485 V292 H250 Z"/>
+      <path d="M250 0 H500 V295 H250 Z"/>
     </clipPath>
-    <pattern id="img2" patternUnits="userSpaceOnUse" x="250" y="15" width="235" height="277">
-      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="235" height="277" />
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="250" y="0" width="250" height="295">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="250" height="295" />
     </pattern>
 
     <!-- FRAME 3: Bottom Right Square -->
     <clipPath id="clip3">
-      <path d="M250 308 H485 V585 H250 Z"/>
+      <path d="M250 300 H500 V600 H250 Z"/>
     </clipPath>
-    <pattern id="img3" patternUnits="userSpaceOnUse" x="250" y="308" width="235" height="277">
-      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="235" height="277" />
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="250" y="300" width="250" height="300">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="250" height="300" />
     </pattern>
   </defs>
 
@@ -31,10 +31,10 @@
   <!-- Photo Frames -->
   <g>
     <!-- Frame 1 -->
-    <path d="M15 15 H245 V585 H15 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+    <path d="M0 0 H245 V600 H0 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
     <!-- Frame 2 -->
-    <path d="M250 15 H485 V292 H250 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+    <path d="M250 0 H500 V295 H250 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
     <!-- Frame 3 -->
-    <path d="M250 308 H485 V585 H250 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+    <path d="M250 300 H500 V600 H250 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
   </g>
 </svg>
