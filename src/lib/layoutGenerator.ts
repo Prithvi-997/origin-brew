@@ -222,6 +222,7 @@ import layout15 from '@/assets/layouts/layout15.svg?raw';
 import layout16 from '@/assets/layouts/layout16.svg?raw';
 import layout17 from '@/assets/layouts/layout17.svg?raw';
 import layout18 from '@/assets/layouts/layout18.svg?raw';
+import layout19 from '@/assets/layouts/layout19.svg?raw';
 
 const layoutTemplates: Record<string, string> = {
   'layout0.svg': layout0,
@@ -243,6 +244,7 @@ const layoutTemplates: Record<string, string> = {
   'layout16.svg': layout16,
   'layout17.svg': layout17,
   'layout18.svg': layout18,
+  'layout19.svg': layout19,
 };
 
 // Helper function removed - now using single-frame layouts directly

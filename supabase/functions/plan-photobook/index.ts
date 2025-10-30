@@ -55,6 +55,7 @@ CRITICAL ASPECT RATIO MATCHING RULES (Highest Priority):
    
    For REGULAR PORTRAITS (aspectRatio 0.65-0.85):
    ✅ BEST MATCHES:
+      - layout19.svg frames 1,2 (aspect 1.11) - PREFERRED for 2 portrait photos stacked vertically
       - layout2.svg frames 1,2 (aspect 0.79, 0.65)
       - layout5.svg frame 1 (aspect 0.49) if photo aspect < 0.7
       - layout8.svg frame 4 (aspect 0.76)
@@ -111,6 +112,7 @@ CRITICAL ASPECT RATIO MATCHING RULES (Highest Priority):
    
    Step 2: Prioritize layouts based on content
    - If full-length portraits ≥ 3: Heavily prioritize layout5.svg, layout2.svg, layout10.svg, layout13.svg, layout14.svg
+   - If exactly 2 portrait photos together: STRONGLY PREFER layout19.svg (stacked vertically, centered, fills page beautifully)
    - If portraits ≥ 5: Use portrait-friendly layouts (layout2, layout5, layout8, layout12, layout14, layout18)
    - If exactly 2 landscape photos together: STRONGLY PREFER layout4.svg (stacked vertically for full page)
    - If landscapes ≥ 5: Use landscape-friendly layouts (layout1, layout4, layout7, layout9, layout11)
