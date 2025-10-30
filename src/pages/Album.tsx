@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Album as AlbumType, AlbumPage, Photo } from "@/lib/types";
 import { generateAlbumPages, generateAlbumPagesWithAI } from "@/lib/layoutGenerator";
 import { analyzeImage } from "@/lib/imageAnalysis";
+import { filterDuplicateFiles } from "@/lib/duplicateDetection";
 import SinglePageView from "@/components/album/SinglePageView";
 import BookView from "@/components/album/BookView";
 import Header from "@/components/Header";
@@ -125,18 +126,30 @@ const Album = () => {
     const files = event.target.files;
     if (!files || files.length === 0 || !album) return;
 
+    // Filter out duplicates
+    const { uniqueFiles, duplicates } = filterDuplicateFiles(files, album.photos);
+    
+    if (duplicates.length > 0) {
+      toast.warning(`Skipped ${duplicates.length} duplicate photo${duplicates.length > 1 ? 's' : ''}: ${duplicates.slice(0, 3).join(', ')}${duplicates.length > 3 ? '...' : ''}`);
+    }
+    
+    if (uniqueFiles.length === 0) {
+      toast.error("All photos are already in the album");
+      return;
+    }
+
     setIsAddingPhotos(true);
-    toast.info(`Adding ${files.length} new photos...`);
+    toast.info(`Adding ${uniqueFiles.length} new photo${uniqueFiles.length > 1 ? 's' : ''}...`);
 
     try {
       // Analyze new photos
       const newPhotoAnalysis = await Promise.all(
-        Array.from(files).map(file => analyzeImage(file))
+        uniqueFiles.map(file => analyzeImage(file))
       );
       const newPhotos: Photo[] = newPhotoAnalysis.map((analysis, index) => ({
         id: `photo-${Date.now()}-${index}`,
-        url: URL.createObjectURL(files[index]),
-        originalFilename: files[index].name,
+        url: URL.createObjectURL(uniqueFiles[index]),
+        originalFilename: uniqueFiles[index].name,
         width: analysis.width,
         height: analysis.height,
         aspectRatio: analysis.aspectRatio,
@@ -163,7 +176,7 @@ const Album = () => {
       setPages(newPages);
       setCurrentPage(0);
 
-      toast.success(`Added ${files.length} photos and regenerated album!`);
+      toast.success(`Added ${uniqueFiles.length} photo${uniqueFiles.length > 1 ? 's' : ''} and regenerated album!`);
     } catch (error) {
       console.error('Error adding photos:', error);
       toast.error('Failed to add photos');

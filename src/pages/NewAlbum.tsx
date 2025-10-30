@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { analyzeImage } from "@/lib/imageAnalysis";
 import { generateAlbumPagesWithAI } from "@/lib/layoutGenerator";
 import { Photo } from "@/lib/types";
+import { filterDuplicateFiles } from "@/lib/duplicateDetection";
 
 const NewAlbum = () => {
   const navigate = useNavigate();
@@ -28,13 +29,25 @@ const NewAlbum = () => {
     input.onchange = async (e) => {
       const files = (e.target as HTMLInputElement).files;
       if (files && files.length > 0) {
-        toast.success(`${files.length} photos uploaded successfully!`);
+        // Filter out duplicates within the new batch
+        const { uniqueFiles, duplicates } = filterDuplicateFiles(files, []);
+        
+        if (duplicates.length > 0) {
+          toast.warning(`Skipped ${duplicates.length} duplicate photo${duplicates.length > 1 ? 's' : ''}`);
+        }
+        
+        if (uniqueFiles.length === 0) {
+          toast.error("All photos are duplicates");
+          return;
+        }
+        
+        toast.success(`${uniqueFiles.length} photo${uniqueFiles.length > 1 ? 's' : ''} uploaded successfully!`);
         
         try {
           // Step 1: Analyze images
           toast.info("Analyzing your photos...");
           const analyzedPhotos: Photo[] = await Promise.all(
-            Array.from(files).map(async (file, index) => {
+            uniqueFiles.map(async (file, index) => {
               const analysis = await analyzeImage(file);
               return {
                 id: `photo-${Date.now()}-${index}`,
