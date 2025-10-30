@@ -14,18 +14,6 @@
       { "id": 7, "aspect_ratio": 1.05 }
     ]
   },
-  "layout2.svg": {
-    "name": "layout2.svg",
-    "frameCount": 4,
-    "orientation": "mixed",
-    "description": "Four photo scrapbook layout",
-    "frames": [
-      { "id": 1, "aspect_ratio": 0.79 },
-      { "id": 2, "aspect_ratio": 0.65 },
-      { "id": 3, "aspect_ratio": 1.0 },
-      { "id": 4, "aspect_ratio": 1.0 }
-    ]
-  },
   "layout3.svg": {
     "name": "layout3.svg",
     "frameCount": 3,
