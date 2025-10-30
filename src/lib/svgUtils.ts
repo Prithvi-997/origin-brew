@@ -90,6 +90,8 @@ export function injectImagesIntoSVG(
     if (imageEl) {
       imageEl.setAttribute('href', photo.url);
       imageEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', photo.url);
+      // Change from "slice" to "meet" to prevent face cropping
+      imageEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
     } else {
       console.warn(`No image element in pattern for frame ${assignment.frameNumber}`);
     }
@@ -117,6 +119,8 @@ export function replaceSVGImage(
   if (imageEl) {
     imageEl.setAttribute('href', newImageUrl);
     imageEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', newImageUrl);
+    // Change from "slice" to "meet" to prevent face cropping
+    imageEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   }
   
   return new XMLSerializer().serializeToString(doc);
