@@ -39,6 +39,16 @@
       { "id": 3, "aspect_ratio": 0.75 }
     ]
   },
+  "layout4.svg": {
+    "name": "layout4.svg",
+    "frameCount": 2,
+    "orientation": "landscape",
+    "description": "Two landscape photos stacked vertically",
+    "frames": [
+      { "id": 1, "aspect_ratio": 1.67 },
+      { "id": 2, "aspect_ratio": 1.67 }
+    ]
+  },
   "layout5.svg": {
     "name": "layout5.svg",
     "frameCount": 3,

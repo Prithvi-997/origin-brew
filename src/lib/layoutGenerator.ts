@@ -207,6 +207,7 @@ import layout0 from '@/assets/layouts/layout0.svg?raw';
 import layout1 from '@/assets/layouts/layout1.svg?raw';
 import layout2 from '@/assets/layouts/layout2.svg?raw';
 import layout3 from '@/assets/layouts/layout3.svg?raw';
+import layout4 from '@/assets/layouts/layout4.svg?raw';
 import layout5 from '@/assets/layouts/layout5.svg?raw';
 import layout6 from '@/assets/layouts/layout6.svg?raw';
 import layout7 from '@/assets/layouts/layout7.svg?raw';
@@ -227,6 +228,7 @@ const layoutTemplates: Record<string, string> = {
   'layout1.svg': layout1,
   'layout2.svg': layout2,
   'layout3.svg': layout3,
+  'layout4.svg': layout4,
   'layout5.svg': layout5,
   'layout6.svg': layout6,
   'layout7.svg': layout7,
