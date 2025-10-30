@@ -1,62 +1,70 @@
 <svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
   <defs>
     <!-- Frame 1: Large Left -->
-    <pattern id="img1" patternUnits="userSpaceOnUse" x="0" y="0" width="252" height="600">
-      <image href="" x="0" y="0" width="252" height="600" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="12" y="15" width="233" height="555">
+      <image href="" x="0" y="0" width="233" height="555" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip1">
-      <path d="M0 0 h252 v600 h-252 Z" />
+      <path d="M12 15 h233 v555 h-233 Z" />
     </clipPath>
 
     <!-- Frame 2: Top Right Top Left -->
-    <pattern id="img2" patternUnits="userSpaceOnUse" x="257" y="0" width="120" height="185">
-      <image href="" x="0" y="0" width="120" height="185" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="258" y="15" width="108" height="165">
+      <image href="" x="0" y="0" width="108" height="165" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip2">
-      <path d="M257 0 h120 v185 h-120 Z" />
+      <path d="M258 15 h108 v165 h-108 Z" />
     </clipPath>
 
     <!-- Frame 3: Top Right Top Right -->
-    <pattern id="img3" patternUnits="userSpaceOnUse" x="382" y="0" width="118" height="185">
-      <image href="" x="0" y="0" width="118" height="185" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="379" y="15" width="108" height="165">
+      <image href="" x="0" y="0" width="108" height="165" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip3">
-      <path d="M382 0 h118 v185 h-118 Z" />
+      <path d="M379 15 h108 v165 h-108 Z" />
     </clipPath>
 
     <!-- Frame 4: Middle Right -->
-    <pattern id="img4" patternUnits="userSpaceOnUse" x="257" y="190" width="243" height="200">
-      <image href="" x="0" y="0" width="243" height="200" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img4" patternUnits="userSpaceOnUse" x="258" y="210" width="229" height="180">
+      <image href="" x="0" y="0" width="229" height="180" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip4">
-      <path d="M257 190 h243 v200 h-243 Z" />
+      <path d="M258 210 h229 v180 h-229 Z" />
     </clipPath>
 
     <!-- Frame 5: Bottom Right Left -->
-    <pattern id="img5" patternUnits="userSpaceOnUse" x="257" y="395" width="120" height="205">
-      <image href="" x="0" y="0" width="120" height="205" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img5" patternUnits="userSpaceOnUse" x="258" y="413" width="108" height="165">
+      <image href="" x="0" y="0" width="108" height="165" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip5">
-      <path d="M257 395 h120 v205 h-120 Z" />
+      <path d="M258 413 h108 v165 h-108 Z" />
     </clipPath>
 
     <!-- Frame 6: Bottom Right Right -->
-    <pattern id="img6" patternUnits="userSpaceOnUse" x="382" y="395" width="118" height="205">
-      <image href="" x="0" y="0" width="118" height="205" preserveAspectRatio="xMidYMid slice" />
+    <pattern id="img6" patternUnits="userSpaceOnUse" x="379" y="413" width="108" height="165">
+      <image href="" x="0" y="0" width="108" height="165" preserveAspectRatio="xMidYMid slice" />
     </pattern>
     <clipPath id="clip6">
-      <path d="M382 395 h118 v205 h-118 Z" />
+      <path d="M379 413 h108 v165 h-108 Z" />
     </clipPath>
   </defs>
 
   <!-- Background -->
   <rect width="500" height="600" fill="#f5f5f5" />
 
+  <!-- White borders around frames -->
+  <rect x="8" y="10" width="242" height="570" fill="#FFFFFF" style="filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.1));" />
+  <rect x="254" y="10" width="117" height="180" fill="#FFFFFF" style="filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.1));" />
+  <rect x="375" y="10" width="117" height="180" fill="#FFFFFF" style="filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.1));" />
+  <rect x="254" y="203" width="238" height="195" fill="#FFFFFF" style="filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.1));" />
+  <rect x="254" y="405" width="117" height="180" fill="#FFFFFF" style="filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.1));" />
+  <rect x="375" y="405" width="117" height="180" fill="#FFFFFF" style="filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.1));" />
+
   <!-- Image frames -->
-  <rect x="0" y="0" width="252" height="600" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
-  <rect x="257" y="0" width="120" height="185" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
-  <rect x="382" y="0" width="118" height="185" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
-  <rect x="257" y="190" width="243" height="200" fill="url(#img4)" clip-path="url(#clip4)" data-photo-frame="4" />
-  <rect x="257" y="395" width="120" height="205" fill="url(#img5)" clip-path="url(#clip5)" data-photo-frame="5" />
-  <rect x="382" y="395" width="118" height="205" fill="url(#img6)" clip-path="url(#clip6)" data-photo-frame="6" />
+  <rect x="12" y="15" width="233" height="555" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+  <rect x="258" y="15" width="108" height="165" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+  <rect x="379" y="15" width="108" height="165" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+  <rect x="258" y="210" width="229" height="180" fill="url(#img4)" clip-path="url(#clip4)" data-photo-frame="4" />
+  <rect x="258" y="413" width="108" height="165" fill="url(#img5)" clip-path="url(#clip5)" data-photo-frame="5" />
+  <rect x="379" y="413" width="108" height="165" fill="url(#img6)" clip-path="url(#clip6)" data-photo-frame="6" />
 </svg>

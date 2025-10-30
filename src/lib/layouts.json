@@ -1,158 +1,87 @@
 {
-  "layout1.svg": {
-    "name": "layout1.svg",
-    "frameCount": 7,
-    "orientation": "mixed",
-    "description": "Seven photo complex collage layout",
-    "frames": [
-      { "id": 1, "aspect_ratio": 1.44 },
-      { "id": 2, "aspect_ratio": 1.54 },
-      { "id": 3, "aspect_ratio": 1.54 },
-      { "id": 4, "aspect_ratio": 0.74 },
-      { "id": 5, "aspect_ratio": 2.35 },
-      { "id": 6, "aspect_ratio": 1.05 },
-      { "id": 7, "aspect_ratio": 1.05 }
-    ]
-  },
-  "layout3.svg": {
-    "name": "layout3.svg",
-    "frameCount": 3,
-    "orientation": "mixed",
-    "description": "Three photo layout with wide bottom",
-    "frames": [
-      { "id": 1, "aspect_ratio": 1.0 },
-      { "id": 2, "aspect_ratio": 1.0 },
-      { "id": 3, "aspect_ratio": 1.43 }
-    ]
-  },
-  "layout4.svg": {
-    "name": "layout4.svg",
-    "frameCount": 2,
-    "orientation": "mixed",
-    "description": "Two photo horizontal split layout",
-    "frames": [
-      { "id": 1, "aspect_ratio": 2.05 },
-      { "id": 2, "aspect_ratio": 2.05 }
-    ]
-  },
   "layout5.svg": {
     "name": "layout5.svg",
     "frameCount": 3,
-    "orientation": "landscape",
-    "description": "Three photo layout: large left, two squares right",
-    "frames": [
-      { "id": 1, "aspect_ratio": 0.49 },
-      { "id": 2, "aspect_ratio": 1.0 },
-      { "id": 3, "aspect_ratio": 1.0 }
-    ]
-  },
-  "layout6.svg": {
-    "name": "layout6.svg",
-    "frameCount": 4,
     "orientation": "mixed",
-    "description": "Four photo grid layout",
+    "description": "Three photo matted layout with large left portrait",
     "frames": [
-      { "id": 1, "aspect_ratio": 1.0 },
-      { "id": 2, "aspect_ratio": 1.0 },
-      { "id": 3, "aspect_ratio": 1.0 },
-      { "id": 4, "aspect_ratio": 1.0 }
+      { "id": 1, "aspect_ratio": 0.41 },
+      { "id": 2, "aspect_ratio": 0.83 },
+      { "id": 3, "aspect_ratio": 0.83 }
     ]
   },
   "layout7.svg": {
     "name": "layout7.svg",
-    "frameCount": 4,
-    "orientation": "portrait",
-    "description": "Four photo portrait layout",
+    "frameCount": 3,
+    "orientation": "mixed",
+    "description": "Three photo matted layout with wide bottom",
     "frames": [
-      { "id": 1, "aspect_ratio": 1.43 },
-      { "id": 2, "aspect_ratio": 1.43 },
-      { "id": 3, "aspect_ratio": 1.43 },
-      { "id": 4, "aspect_ratio": 1.43 }
+      { "id": 1, "aspect_ratio": 1.0 },
+      { "id": 2, "aspect_ratio": 1.0 },
+      { "id": 3, "aspect_ratio": 1.46 }
     ]
   },
   "layout8.svg": {
     "name": "layout8.svg",
     "frameCount": 5,
     "orientation": "mixed",
-    "description": "Five photo creative layout with wide middle",
+    "description": "Five photo creative layout with large center portrait",
     "frames": [
-      { "id": 1, "aspect_ratio": 1.43 },
-      { "id": 2, "aspect_ratio": 1.43 },
-      { "id": 3, "aspect_ratio": 1.0 },
-      { "id": 4, "aspect_ratio": 0.76 },
-      { "id": 5, "aspect_ratio": 1.0 }
+      { "id": 1, "aspect_ratio": 1.54 },
+      { "id": 2, "aspect_ratio": 1.54 },
+      { "id": 3, "aspect_ratio": 0.78 },
+      { "id": 4, "aspect_ratio": 0.74 },
+      { "id": 5, "aspect_ratio": 0.78 }
     ]
   },
   "layout9.svg": {
     "name": "layout9.svg",
     "frameCount": 5,
-    "orientation": "mixed",
-    "description": "Five photo asymmetric layout",
+    "orientation": "landscape",
+    "description": "Five photo layout with wide hero top",
     "frames": [
-      { "id": 1, "aspect_ratio": 1.43 },
-      { "id": 2, "aspect_ratio": 1.43 },
-      { "id": 3, "aspect_ratio": 2.75 },
-      { "id": 4, "aspect_ratio": 1.43 },
-      { "id": 5, "aspect_ratio": 1.43 }
+      { "id": 1, "aspect_ratio": 1.77 },
+      { "id": 2, "aspect_ratio": 1.79 },
+      { "id": 3, "aspect_ratio": 1.79 },
+      { "id": 4, "aspect_ratio": 1.79 },
+      { "id": 5, "aspect_ratio": 1.79 }
     ]
   },
   "layout10.svg": {
     "name": "layout10.svg",
-    "frameCount": 4,
-    "orientation": "square",
-    "description": "Four photo square grid layout",
+    "frameCount": 5,
+    "orientation": "landscape",
+    "description": "Five photo symmetrical layout with wide center",
     "frames": [
-      { "id": 1, "aspect_ratio": 1.0 },
-      { "id": 2, "aspect_ratio": 1.37 },
-      { "id": 3, "aspect_ratio": 0.54 },
-      { "id": 4, "aspect_ratio": 1.2 },
-      { "id": 5, "aspect_ratio": 0.48 }
-    ]
-  },
-  "layout11.svg": {
-    "name": "layout11.svg",
-    "frameCount": 3,
-    "orientation": "portrait",
-    "description": "Three photo vertical emphasis layout",
-    "frames": [
-      { "id": 1, "aspect_ratio": 1.7 },
-      { "id": 2, "aspect_ratio": 2.13 },
-      { "id": 3, "aspect_ratio": 3.4 }
-    ]
-  },
-  "layout12.svg": {
-    "name": "layout12.svg",
-    "frameCount": 3,
-    "orientation": "mixed",
-    "description": "Three photo layout with large left portrait",
-    "frames": [
-      { "id": 1, "aspect_ratio": 1.0 },
-      { "id": 2, "aspect_ratio": 0.75 },
-      { "id": 3, "aspect_ratio": 3.67 }
+      { "id": 1, "aspect_ratio": 1.63 },
+      { "id": 2, "aspect_ratio": 1.63 },
+      { "id": 3, "aspect_ratio": 2.13 },
+      { "id": 4, "aspect_ratio": 1.63 },
+      { "id": 5, "aspect_ratio": 1.63 }
     ]
   },
   "layout13.svg": {
     "name": "layout13.svg",
     "frameCount": 4,
-    "orientation": "mixed",
-    "description": "Four photo layout with wide top hero",
+    "orientation": "square",
+    "description": "Four photo square grid layout",
     "frames": [
-      { "id": 1, "aspect_ratio": 2.44 },
-      { "id": 2, "aspect_ratio": 0.64 },
-      { "id": 3, "aspect_ratio": 1.0 },
-      { "id": 4, "aspect_ratio": 0.45 }
+      { "id": 1, "aspect_ratio": 0.83 },
+      { "id": 2, "aspect_ratio": 0.83 },
+      { "id": 3, "aspect_ratio": 0.83 },
+      { "id": 4, "aspect_ratio": 0.83 }
     ]
   },
   "layout14.svg": {
     "name": "layout14.svg",
     "frameCount": 4,
-    "orientation": "portrait",
-    "description": "Four photo layout with large portrait left",
+    "orientation": "mixed",
+    "description": "Four photo layout with large portrait and stacked frames",
     "frames": [
-      { "id": 1, "aspect_ratio": 0.65 },
-      { "id": 2, "aspect_ratio": 1.64 },
-      { "id": 3, "aspect_ratio": 2.0 },
-      { "id": 4, "aspect_ratio": 3.0 }
+      { "id": 1, "aspect_ratio": 0.52 },
+      { "id": 2, "aspect_ratio": 1.0 },
+      { "id": 3, "aspect_ratio": 1.0 },
+      { "id": 4, "aspect_ratio": 1.0 }
     ]
   },
   "layout15.svg": {
@@ -161,30 +90,30 @@
     "orientation": "mixed",
     "description": "Five photo magazine spread layout",
     "frames": [
-      { "id": 1, "aspect_ratio": 1.0 },
-      { "id": 2, "aspect_ratio": 1.35 },
-      { "id": 3, "aspect_ratio": 1.30 },
-      { "id": 4, "aspect_ratio": 1.31 },
-      { "id": 5, "aspect_ratio": 1.29 }
+      { "id": 1, "aspect_ratio": 0.83 },
+      { "id": 2, "aspect_ratio": 1.12 },
+      { "id": 3, "aspect_ratio": 1.08 },
+      { "id": 4, "aspect_ratio": 1.10 },
+      { "id": 5, "aspect_ratio": 1.07 }
     ]
   },
   "layout16.svg": {
     "name": "layout16.svg",
     "frameCount": 5,
-    "orientation": "portrait",
+    "orientation": "mixed",
     "description": "Five photo symmetrical layout with wide top and bottom",
     "frames": [
-      { "id": 1, "aspect_ratio": 4.7 },
-      { "id": 2, "aspect_ratio": 1.07 },
-      { "id": 3, "aspect_ratio": 1.0 },
-      { "id": 4, "aspect_ratio": 1.07 },
-      { "id": 5, "aspect_ratio": 4.7 }
+      { "id": 1, "aspect_ratio": 3.13 },
+      { "id": 2, "aspect_ratio": 0.71 },
+      { "id": 3, "aspect_ratio": 0.67 },
+      { "id": 4, "aspect_ratio": 0.71 },
+      { "id": 5, "aspect_ratio": 3.13 }
     ]
   },
   "layout17.svg": {
     "name": "layout17.svg",
     "frameCount": 6,
-    "orientation": "portrait",
+    "orientation": "mixed",
     "description": "Six photo layout with panoramic top",
     "frames": [
       { "id": 1, "aspect_ratio": 2.61 },
@@ -201,21 +130,12 @@
     "orientation": "mixed",
     "description": "Six photo asymmetric layout with large portrait",
     "frames": [
-      { "id": 1, "aspect_ratio": 0.76 },
-      { "id": 2, "aspect_ratio": 1.18 },
-      { "id": 3, "aspect_ratio": 1.18 },
-      { "id": 4, "aspect_ratio": 2.29 },
-      { "id": 5, "aspect_ratio": 1.18 },
-      { "id": 6, "aspect_ratio": 1.18 }
-    ]
-  },
-  "singlephoto.svg": {
-    "name": "singlephoto.svg",
-    "frameCount": 1,
-    "orientation": "portrait",
-    "description": "Single photo full page dramatic layout",
-    "frames": [
-      { "id": 1, "aspect_ratio": 1.33 }
+      { "id": 1, "aspect_ratio": 0.42 },
+      { "id": 2, "aspect_ratio": 0.65 },
+      { "id": 3, "aspect_ratio": 0.65 },
+      { "id": 4, "aspect_ratio": 1.27 },
+      { "id": 5, "aspect_ratio": 0.65 },
+      { "id": 6, "aspect_ratio": 0.65 }
     ]
   }
 }
