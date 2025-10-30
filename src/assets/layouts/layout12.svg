@@ -28,11 +28,6 @@
   <!-- Background -->
   <rect width="500" height="600" fill="#f5f5f5" />
 
-  <!-- White borders around frames -->
-  <rect x="20" y="25" width="300" height="360" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-  <rect x="315" y="25" width="165" height="218" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-  <rect x="20" y="380" width="460" height="195" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-
   <!-- Image frames -->
   <rect x="25" y="30" width="290" height="350" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
   <rect x="320" y="30" width="155" height="208" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />

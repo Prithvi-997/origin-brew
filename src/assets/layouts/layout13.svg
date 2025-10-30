@@ -36,12 +36,6 @@
   <!-- Background -->
   <rect width="500" height="600" fill="#f5f5f5" />
 
-  <!-- White borders around frames -->
-  <rect x="20" y="25" width="460" height="230" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-  <rect x="20" y="250" width="155" height="330" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-  <rect x="170" y="250" width="155" height="155" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-  <rect x="320" y="250" width="160" height="330" fill="#FFFFFF" style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));" />
-
   <!-- Image frames -->
   <rect x="25" y="30" width="450" height="220" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
   <rect x="25" y="255" width="145" height="320" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
