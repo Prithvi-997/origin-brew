@@ -244,6 +244,66 @@ const layoutTemplates: Record<string, string> = {
 };
 
 /**
+ * Find the best layout for a given number of photos
+ */
+function findBestLayoutForPhotos(photoIds: string[], photosMap: Map<string, Photo>): string {
+  const photoCount = photoIds.length;
+  
+  // Find all layouts with matching frame count
+  const matchingLayouts = Object.entries(layoutsMetadata)
+    .filter(([_, layout]) => layout.frameCount === photoCount)
+    .map(([name, layout]) => ({ name, layout }));
+  
+  if (matchingLayouts.length === 0) {
+    console.warn(`No layout found for ${photoCount} photos, using fallback`);
+    // Fallback: find closest frame count
+    const sorted = Object.entries(layoutsMetadata)
+      .sort((a, b) => Math.abs(a[1].frameCount - photoCount) - Math.abs(b[1].frameCount - photoCount));
+    return sorted[0]?.[0] || 'layout0.svg';
+  }
+  
+  // If only one match, use it
+  if (matchingLayouts.length === 1) {
+    return matchingLayouts[0].name;
+  }
+  
+  // Score each layout based on how well photos fit frames
+  const scoredLayouts = matchingLayouts.map(({ name, layout }) => {
+    let score = 0;
+    
+    photoIds.forEach((photoId, idx) => {
+      const photo = photosMap.get(photoId);
+      if (!photo || idx >= layout.frames.length) return;
+      
+      const photoAspect = photo.aspectRatio || 1;
+      const frameAspect = layout.frames[idx].aspect_ratio;
+      const aspectDiff = Math.abs(photoAspect - frameAspect);
+      
+      // Better fit = higher score
+      if (aspectDiff < 0.15) score += 10;
+      else if (aspectDiff < 0.30) score += 5;
+      else if (aspectDiff < 0.50) score += 2;
+      
+      // Check orientation match
+      const isPortraitPhoto = photoAspect < 0.85;
+      const isLandscapePhoto = photoAspect > 1.15;
+      const isPortraitFrame = frameAspect < 0.85;
+      const isLandscapeFrame = frameAspect > 1.2;
+      
+      if ((isPortraitPhoto && isPortraitFrame) || (isLandscapePhoto && isLandscapeFrame)) {
+        score += 5;
+      }
+    });
+    
+    return { name, score };
+  });
+  
+  // Return layout with highest score
+  scoredLayouts.sort((a, b) => b.score - a.score);
+  return scoredLayouts[0].name;
+}
+
+/**
  * AI-powered layout generation
  * Uses Lovable AI to intelligently arrange photos based on orientation and aspect ratio
  */
@@ -376,45 +436,62 @@ export async function generateAlbumPagesWithAI(photos: Photo[]): Promise<AlbumPa
     const rotationIndex: Record<number, number> = {};
     cleanedPages.forEach((pagePlan, pageIndex) => {
       const originalLayoutName = pagePlan.layout_to_use;
-      // Determine frames needed for this page
-      const framesNeeded = pagePlan.frames.length;
-      // Rotate among layouts that have the same frame count to avoid repetition
-      let chosenLayoutName = originalLayoutName;
-      const candidates = layoutsByFrameCount[framesNeeded];
-      if (candidates && candidates.length) {
-        const idx = rotationIndex[framesNeeded] ?? 0;
-        chosenLayoutName = candidates[idx % candidates.length];
-        rotationIndex[framesNeeded] = idx + 1;
-      }
-      const layout = layoutsMetadata[chosenLayoutName as keyof typeof layoutsMetadata];
-      const templateSvg = layoutTemplates[chosenLayoutName];
-
-      if (!templateSvg || !layout) {
-        console.error(`Template not found: ${chosenLayoutName}`);
+      const originalLayout = layoutsMetadata[originalLayoutName as keyof typeof layoutsMetadata];
+      
+      if (!originalLayout) {
+        console.error(`Layout not found: ${originalLayoutName}`);
         return;
       }
-
-      // Validate frame numbers
+      
+      // Validate frame numbers first
       const validFrames = pagePlan.frames.filter(frame => {
-        if (frame.frame_number < 1 || frame.frame_number > layout.frameCount) {
-          console.warn(`Invalid frame_number ${frame.frame_number} for ${chosenLayoutName}`);
+        if (frame.frame_number < 1 || frame.frame_number > originalLayout.frameCount) {
+          console.warn(`❌ Invalid frame_number ${frame.frame_number} for ${originalLayoutName} (max: ${originalLayout.frameCount})`);
           return false;
         }
         return true;
       });
-
-      // Build photo assignments
-      const photoAssignments = validFrames.map(frame => ({
-        frameNumber: frame.frame_number,
-        photoId: frame.image_id,
+      
+      const photoIds = validFrames.map(frame => frame.image_id);
+      const actualPhotoCount = photoIds.length;
+      
+      // CRITICAL: Check if photo count matches layout frame count
+      let chosenLayoutName = originalLayoutName;
+      let layout = originalLayout;
+      
+      if (actualPhotoCount !== originalLayout.frameCount) {
+        console.log(`⚠️ Layout mismatch: ${originalLayoutName} needs ${originalLayout.frameCount} photos but only ${actualPhotoCount} valid photos. Finding better layout...`);
+        
+        // Find a better-fitting layout
+        chosenLayoutName = findBestLayoutForPhotos(photoIds, photosMap);
+        layout = layoutsMetadata[chosenLayoutName as keyof typeof layoutsMetadata];
+        
+        console.log(`✅ Adjusted to ${chosenLayoutName} (${layout.frameCount} frames) for ${actualPhotoCount} photos`);
+      }
+      
+      const templateSvg = layoutTemplates[chosenLayoutName];
+      
+      if (!templateSvg || !layout) {
+        console.error(`Template not found: ${chosenLayoutName}`);
+        return;
+      }
+      
+      // Final safety check
+      if (photoIds.length !== layout.frameCount) {
+        console.error(`❌ CRITICAL: Photo count (${photoIds.length}) still doesn't match layout frame count (${layout.frameCount}). Skipping page.`);
+        return;
+      }
+      
+      // Build photo assignments with sequential frame numbers (1, 2, 3...)
+      const photoAssignments = photoIds.map((photoId, idx) => ({
+        frameNumber: idx + 1,
+        photoId: photoId,
       }));
-
+      
       // Generate SVG with images
       let svgContent = templateSvg;
       svgContent = uniquifySVGIds(svgContent, `page${pageIndex}`);
       svgContent = injectImagesIntoSVG(svgContent, photoAssignments, photosMap);
-
-      const photoIds = validFrames.map(frame => frame.image_id);
       
       pages.push({
         id: `page-${pageIndex}`,

@@ -139,8 +139,12 @@ CRITICAL ASPECT RATIO MATCHING RULES (Highest Priority):
 
 9. TECHNICAL REQUIREMENTS:
    - Every photo must be used exactly once
-   - Fill all frames in each chosen layout
+   - Fill ALL frames in each chosen layout (no empty frames allowed)
    - Validate frame_number is between 1 and layout.frameCount
+   - CRITICAL: If layout has N frames, you MUST use ALL frame numbers 1 through N
+   - NEVER skip frame numbers (e.g., don't use frames 1,2,4 if layout has 4 frames - use 1,2,3,4)
+   - Frame count for each layout:
+${Object.entries(layouts).map(([name, layout]: [string, any]) => `     * ${name}: ${layout.frameCount} frames (must use frames 1-${layout.frameCount})`).join('\n')}
 
 MANDATORY VALIDATION BEFORE RETURNING PLAN (CRITICAL):
 You MUST validate every photo-to-frame assignment before returning your plan:
