@@ -30,39 +30,119 @@ ${JSON.stringify(layouts, null, 2)}
 Photos to arrange (with orientation, aspect ratio, and priority):
 ${JSON.stringify(photos, null, 2)}
 
-CRITICAL DESIGN PRINCIPLES:
+CRITICAL ASPECT RATIO MATCHING RULES (Highest Priority):
 
-1. PHOTO-TO-FRAME MATCHING (Highest Priority):
-   - Match portrait photos (aspectRatio < 0.85) to portrait frames (aspect_ratio < 0.9)
-   - Match landscape photos (aspectRatio > 1.25) to landscape frames (aspect_ratio > 1.2)
-   - Match square photos (0.85-1.15) to square frames (0.9-1.1)
-   - Prioritize close aspect ratio matches (within 0.2 difference is ideal)
-   - High-priority photos deserve prominent placement (larger frames or hero layouts like singlephoto.svg)
+1. PHOTO CLASSIFICATION:
+   - Full-length portraits: aspectRatio < 0.65 (e.g., 0.45, 0.55, 0.60) - tall vertical photos showing full body
+   - Regular portraits: aspectRatio 0.65-0.85 (e.g., 0.70, 0.75, 0.80) - standard portrait orientation
+   - Square-ish: aspectRatio 0.85-1.15 (e.g., 0.90, 1.0, 1.10) - square or nearly square
+   - Landscape: aspectRatio 1.15-1.6 (e.g., 1.25, 1.33, 1.50) - horizontal orientation
+   - Wide landscape/panoramic: aspectRatio > 1.6 (e.g., 1.78, 2.0, 2.5) - very wide photos
 
-2. LAYOUT DIVERSITY & RHYTHM:
-   - Create visual rhythm: busy multi-photo page → calm single-photo page → busy page
+2. OPTIMAL FRAME MATCHING FOR EACH PHOTO TYPE:
+
+   For FULL-LENGTH PORTRAITS (aspectRatio < 0.65):
+   ✅ BEST MATCHES:
+      - layout5.svg frame 1 (aspect 0.49) - Perfect for full-length portraits!
+      - layout2.svg frame 2 (aspect 0.65) - Excellent fit
+      - layout10.svg frame 5 (aspect 0.48) - Great for tall photos
+      - layout13.svg frame 4 (aspect 0.45) - Perfect tall frame
+      - layout14.svg frame 1 (aspect 0.65) - Good portrait frame
+   ❌ NEVER USE:
+      - Landscape frames (aspect > 1.2) - Will crop faces and body badly
+      - Square frames (aspect 0.9-1.1) - Will force severe cropping
+      - Wide frames (aspect > 1.5) - Absolutely unsuitable
+   
+   For REGULAR PORTRAITS (aspectRatio 0.65-0.85):
+   ✅ BEST MATCHES:
+      - layout2.svg frames 1,2 (aspect 0.79, 0.65)
+      - layout5.svg frame 1 (aspect 0.49) if photo aspect < 0.7
+      - layout8.svg frame 4 (aspect 0.76)
+      - layout10.svg frame 3 (aspect 0.54) if photo aspect < 0.7
+      - layout18.svg frame 1 (aspect 0.76)
+   
+   For SQUARE PHOTOS (aspectRatio 0.85-1.15):
+   ✅ BEST MATCHES:
+      - layout2.svg frames 3,4 (aspect 1.0)
+      - layout3.svg frames 1,2 (aspect 1.0)
+      - layout5.svg frames 2,3 (aspect 1.0)
+      - layout6.svg all frames (aspect 1.0)
+      - layout8.svg frames 3,5 (aspect 1.0)
+   
+   For LANDSCAPE PHOTOS (aspectRatio 1.15-1.6):
+   ✅ BEST MATCHES:
+      - layout1.svg frames 1,2,3 (aspect 1.44, 1.54, 1.54)
+      - layout3.svg frame 3 (aspect 1.43)
+      - layout7.svg all frames (aspect 1.43)
+      - layout8.svg frames 1,2 (aspect 1.43)
+   
+   For WIDE PANORAMIC (aspectRatio > 1.6):
+   ✅ BEST MATCHES:
+      - layout4.svg frames 1,2 (aspect 2.05)
+      - layout1.svg frame 5 (aspect 2.35)
+      - layout9.svg frame 3 (aspect 2.75)
+      - layout13.svg frame 1 (aspect 2.44)
+      - layout17.svg frame 1 (aspect 2.61)
+
+3. ASPECT RATIO FIT SCORING SYSTEM:
+   Calculate fit score for each photo-to-frame assignment:
+   - aspectDiff = |photo.aspectRatio - frame.aspect_ratio|
+   - Perfect match (aspectDiff < 0.10): +100 points
+   - Excellent match (0.10 ≤ aspectDiff < 0.15): +90 points
+   - Good match (0.15 ≤ aspectDiff < 0.20): +80 points
+   - Acceptable (0.20 ≤ aspectDiff < 0.30): +60 points
+   - Poor match (0.30 ≤ aspectDiff < 0.50): +30 points
+   - Terrible match (aspectDiff ≥ 0.50): -50 points (AVOID!)
+
+4. CRITICAL PENALTY SYSTEM (Apply these penalties):
+   - Portrait (aspect < 0.85) in landscape frame (aspect > 1.2): -100 penalty
+   - Landscape (aspect > 1.15) in portrait frame (aspect < 0.85): -80 penalty
+   - Full-length portrait (aspect < 0.65) in square/landscape frame: -150 penalty
+   - Any mismatch with aspectDiff > 0.5: -100 penalty
+   - Using same layout 3+ times in a row: -50 penalty per occurrence
+
+5. LAYOUT SELECTION STRATEGY:
+   Step 1: Analyze photo collection
+   - Count full-length portraits (aspect < 0.65)
+   - Count regular portraits (aspect 0.65-0.85)
+   - Count landscapes (aspect > 1.15)
+   - Count panoramics (aspect > 1.6)
+   
+   Step 2: Prioritize layouts based on content
+   - If full-length portraits ≥ 3: Heavily prioritize layout5.svg, layout2.svg, layout10.svg, layout13.svg, layout14.svg
+   - If portraits ≥ 5: Use portrait-friendly layouts (layout2, layout5, layout8, layout12, layout14, layout18)
+   - If landscapes ≥ 5: Use landscape-friendly layouts (layout1, layout4, layout7, layout9, layout11)
+   - If panoramics ≥ 2: Reserve layout4.svg, layout9.svg frame 3, layout13.svg frame 1
+   - For highest priority photos: Consider singlephoto.svg (full page impact)
+
+6. FRAME-BY-FRAME EVALUATION PROCESS:
+   For each photo assignment:
+   a) Calculate fit score with target frame
+   b) If fit score < 50, search for better frame in current layout
+   c) If no good frame in current layout, switch to different layout
+   d) NEVER assign a photo if penalty would apply
+   e) Prioritize visual quality over completing a specific page
+
+7. VISUAL QUALITY REQUIREMENTS:
+   - Faces must be fully visible (no cropping at neck, forehead, or sides)
+   - Full-length portrait bodies should be fully contained
+   - Prefer slight white space (letterboxing) over aggressive face cropping
+   - Aspect difference > 0.4 is unacceptable for portraits
+   - Ensure breathing room: alternate dense pages (5-7 photos) with sparse pages (1-3 photos)
+
+8. LAYOUT DIVERSITY & RHYTHM:
    - NEVER use the same layout more than 2 times consecutively
-   - Vary between dense layouts (6+ photos) and spacious layouts (1-3 photos)
-   - Use single-photo layouts (singlephoto.svg) for the highest priority images
-   - Rotate through different frame counts (3, 4, 5, 6 photos per page)
+   - Create visual rhythm: busy page → calm page → busy page
+   - Rotate through different frame counts (1, 2, 3, 4, 5, 6 photos per page)
+   - Use singlephoto.svg for highest priority images
+   - Balance portrait-heavy and landscape-heavy pages
 
-3. VISUAL STORYTELLING:
-   - Group related photos by orientation patterns (all portraits, all landscapes, mixed)
-   - Create breathing room - follow dense pages with simpler layouts
-   - Place hero images (highest priority) at strategic points (opening, middle, closing pages)
-   - Consider visual weight distribution across facing pages in a book spread
-
-4. TECHNICAL REQUIREMENTS:
+9. TECHNICAL REQUIREMENTS:
    - Every photo must be used exactly once
    - Fill all frames in each chosen layout
-   - Ensure frame count matches available photos for each page
+   - Validate frame_number is between 1 and layout.frameCount
 
-5. QUALITY OVER QUANTITY:
-   - Prioritize perfect aspect ratio matches over using a specific layout
-   - If a photo doesn't fit well in any frame on a page, choose a different layout
-   - Aim for <0.15 aspect ratio difference between photo and frame when possible
-
-Your response should use the create_photobook_plan function to return a complete, optimized plan that creates a visually stunning photobook.`;
+Your response should use the create_photobook_plan function to return a complete, optimized plan that creates a visually stunning photobook with perfect photo-to-frame matching.`;
 
     // Call Lovable AI with tool calling for structured output
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

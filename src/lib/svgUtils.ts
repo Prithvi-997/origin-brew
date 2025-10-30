@@ -1,6 +1,39 @@
 import { Photo } from './types';
 
 /**
+ * Determines optimal preserveAspectRatio based on photo-to-frame fit
+ * Uses hybrid approach: slice for good matches, meet for mismatches, smart positioning for severe mismatches
+ */
+function getOptimalPreserveAspectRatio(
+  photoAspect: number,
+  frameAspect: number
+): string {
+  const aspectDiff = Math.abs(photoAspect - frameAspect);
+  
+  // Perfect or very close match (< 0.25 difference): use slice for professional look
+  // Slight crop is fine and looks better than letterboxing
+  if (aspectDiff < 0.25) {
+    return 'xMidYMid slice';
+  }
+  
+  // Moderate mismatch (0.25-0.4): use meet to show full image
+  // Accept slight letterboxing to preserve all content
+  if (aspectDiff < 0.4) {
+    return 'xMidYMid meet';
+  }
+  
+  // Severe mismatch - this shouldn't happen if AI is working correctly
+  // But if it does, prioritize showing important content
+  if (photoAspect < frameAspect) {
+    // Portrait in landscape frame - show top portion (faces) with center horizontal alignment
+    return 'xMidYMin slice';
+  } else {
+    // Landscape in portrait frame - center both ways and show full image
+    return 'xMidYMid meet';
+  }
+}
+
+/**
  * Makes all IDs in an SVG unique by appending a suffix
  * This prevents ID conflicts when multiple pages are rendered
  */
@@ -90,8 +123,16 @@ export function injectImagesIntoSVG(
     if (imageEl) {
       imageEl.setAttribute('href', photo.url);
       imageEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', photo.url);
-      // Change from "slice" to "meet" to prevent face cropping
-      imageEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      
+      // Smart aspect ratio handling based on photo-to-frame fit
+      // Get frame dimensions from pattern attributes to calculate frame aspect ratio
+      const patternWidth = parseFloat(pattern.getAttribute('width') || '1');
+      const patternHeight = parseFloat(pattern.getAttribute('height') || '1');
+      const frameAspect = patternWidth / patternHeight;
+      const photoAspect = photo.aspectRatio || 1;
+      
+      const optimalPreserveAspectRatio = getOptimalPreserveAspectRatio(photoAspect, frameAspect);
+      imageEl.setAttribute('preserveAspectRatio', optimalPreserveAspectRatio);
     } else {
       console.warn(`No image element in pattern for frame ${assignment.frameNumber}`);
     }
@@ -119,7 +160,10 @@ export function replaceSVGImage(
   if (imageEl) {
     imageEl.setAttribute('href', newImageUrl);
     imageEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', newImageUrl);
-    // Change from "slice" to "meet" to prevent face cropping
+    
+    // Apply smart aspect ratio handling
+    // Note: We don't have photo metadata here, so we use a balanced approach
+    // In the future, this could be enhanced to accept photo metadata
     imageEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   }
   
