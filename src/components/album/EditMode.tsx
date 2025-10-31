@@ -3,20 +3,14 @@ import { AlbumPage, Photo } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Save, X, Undo2, Redo2, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
-import PageOperations from './PageOperations';
-import LayoutSelector from './LayoutSelector';
 import PageThumbnailStrip from './PageThumbnailStrip';
 import DragDropProvider from './DragDropProvider';
 import { useEditHistory } from '@/hooks/useEditHistory';
 import {
   swapPhotos,
-  changePageLayout,
-  duplicatePage,
-  deletePage,
   reorderPages,
   movePhotoWithLayoutAdjustment,
 } from '@/lib/editOperations';
-import { regeneratePages } from '@/lib/pageRegenerator';
 import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -49,9 +43,7 @@ export default function EditMode({
   onDragEnd: parentOnDragEnd,
 }: EditModeProps) {
   const [workingPages, setWorkingPages] = useState(pages);
-  const [layoutSelectorOpen, setLayoutSelectorOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<any>(null);
-  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const { canUndo, canRedo, addEntry, undo, redo } = useEditHistory();
 
@@ -77,68 +69,6 @@ export default function EditMode({
     }
   };
 
-  const handleSwapLayout = () => {
-    setLayoutSelectorOpen(true);
-  };
-
-  const handleLayoutSelect = (layoutName: string) => {
-    const newPages = changePageLayout(workingPages, currentPage, layoutName, photos);
-    setWorkingPages(newPages);
-    addEntry({
-      operation: 'change_layout',
-      pageIndex: currentPage,
-      details: { layoutName },
-    });
-    toast.success('Layout changed');
-  };
-
-  const handleRegeneratePage = async () => {
-    setIsRegenerating(true);
-    try {
-      const newPages = await regeneratePages(workingPages, [currentPage], photos);
-      setWorkingPages(newPages);
-      addEntry({
-        operation: 'change_layout',
-        pageIndex: currentPage,
-        details: { regenerated: true },
-      });
-      toast.success('Page regenerated');
-    } catch (error) {
-      toast.error('Failed to regenerate page');
-      console.error(error);
-    } finally {
-      setIsRegenerating(false);
-    }
-  };
-
-  const handleDuplicatePage = () => {
-    const newPages = duplicatePage(workingPages, currentPage);
-    setWorkingPages(newPages);
-    addEntry({
-      operation: 'add_page',
-      pageIndex: currentPage + 1,
-      details: { duplicated: true },
-    });
-    toast.success('Page duplicated');
-  };
-
-  const handleDeletePage = () => {
-    if (workingPages.length <= 1) {
-      toast.error('Cannot delete the last page');
-      return;
-    }
-    const newPages = deletePage(workingPages, currentPage);
-    setWorkingPages(newPages);
-    addEntry({
-      operation: 'delete_page',
-      pageIndex: currentPage,
-      details: {},
-    });
-    if (currentPage >= newPages.length) {
-      onCurrentPageChange(newPages.length - 1);
-    }
-    toast.success('Page deleted');
-  };
 
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedItem(event.active.data.current);
@@ -243,13 +173,6 @@ export default function EditMode({
               <Redo2 className="h-4 w-4 mr-2" />
               Redo
             </Button>
-            <PageOperations
-              onSwapLayout={handleSwapLayout}
-              onRegeneratePage={handleRegeneratePage}
-              onDuplicatePage={handleDuplicatePage}
-              onDeletePage={handleDeletePage}
-              canDelete={workingPages.length > 1}
-            />
             <Button variant="outline" size="sm" onClick={onCancel}>
               <X className="h-4 w-4 mr-2" />
               Cancel
@@ -271,15 +194,6 @@ export default function EditMode({
           isEditMode={true}
         />
       </SortableContext>
-
-      {/* Layout Selector Modal */}
-      <LayoutSelector
-        open={layoutSelectorOpen}
-        onOpenChange={setLayoutSelectorOpen}
-        currentLayout={workingPages[currentPage]?.layoutName || ''}
-        frameCount={workingPages[currentPage]?.photoIds?.length}
-        onSelectLayout={handleLayoutSelect}
-      />
     </>
   );
 }
