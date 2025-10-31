@@ -100,14 +100,6 @@ const Album = () => {
     setIsEditMode(true);
   };
 
-  // Safety guard: exit edit mode if view mode changes
-  useEffect(() => {
-    if (isEditMode && viewMode !== 'book') {
-      setIsEditMode(false);
-      toast.info('Exited edit mode - only available in book view');
-    }
-  }, [viewMode, isEditMode]);
-
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedItem(event.active.data.current);
   };
