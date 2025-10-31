@@ -93,6 +93,21 @@ const Album = () => {
     toast.info('Edit cancelled');
   };
 
+  const handleEnterEditMode = () => {
+    if (viewMode !== 'book') {
+      setViewMode('book');
+    }
+    setIsEditMode(true);
+  };
+
+  // Safety guard: exit edit mode if view mode changes
+  useEffect(() => {
+    if (isEditMode && viewMode !== 'book') {
+      setIsEditMode(false);
+      toast.info('Exited edit mode - only available in book view');
+    }
+  }, [viewMode, isEditMode]);
+
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedItem(event.active.data.current);
   };
@@ -249,7 +264,7 @@ const Album = () => {
                 {viewMode === 'book' && (
                   <Button
                     size="sm"
-                    onClick={() => setIsEditMode(true)}
+                    onClick={handleEnterEditMode}
                     className="gap-2"
                   >
                     <Pencil className="h-4 w-4" />
@@ -268,31 +283,19 @@ const Album = () => {
           <DragDropProvider onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <ScrollArea className="h-[calc(100vh-220px)]">
               <div className="space-y-8 pb-8">
-                {viewMode === 'single' ? (
-                  pages.map((page, index) => (
-                    <div key={index} className="scroll-snap-start">
-                      <SinglePageView 
-                        pages={[page]} 
+                {Array.from({ length: Math.ceil(totalPages / 2) }, (_, i) => {
+                  const leftPage = pages[i * 2];
+                  const rightPage = pages[i * 2 + 1];
+                  return (
+                    <div key={i} className="scroll-snap-start">
+                      <BookView 
+                        pages={[leftPage, rightPage].filter(Boolean)} 
                         isEditMode={isEditMode}
-                        pageStartIndex={index}
+                        pageStartIndex={i * 2}
                       />
                     </div>
-                  ))
-                ) : (
-                  Array.from({ length: Math.ceil(totalPages / 2) }, (_, i) => {
-                    const leftPage = pages[i * 2];
-                    const rightPage = pages[i * 2 + 1];
-                    return (
-                      <div key={i} className="scroll-snap-start">
-                        <BookView 
-                          pages={[leftPage, rightPage].filter(Boolean)} 
-                          isEditMode={isEditMode}
-                          pageStartIndex={i * 2}
-                        />
-                      </div>
-                    );
-                  })
-                )}
+                  );
+                })}
               </div>
             </ScrollArea>
           </DragDropProvider>
