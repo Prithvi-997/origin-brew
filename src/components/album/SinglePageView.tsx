@@ -1,6 +1,6 @@
 import { AlbumPage } from "@/lib/types";
 import FrameEditor from "./FrameEditor";
-
+import PageDropZone from "./PageDropZone";
 interface SinglePageViewProps {
   pages: AlbumPage[];
   isEditMode?: boolean;
@@ -15,7 +15,7 @@ const SinglePageView = ({ pages, isEditMode = false, pageStartIndex = 0 }: Singl
   return (
     <div className="flex justify-center">
       <div 
-        className="bg-white rounded-lg shadow-2xl overflow-hidden relative"
+        className="bg-white rounded-lg shadow-2xl overflow-hidden relative group"
         style={{ width: '500px', height: '600px' }}
       >
         <div 
@@ -32,6 +32,7 @@ const SinglePageView = ({ pages, isEditMode = false, pageStartIndex = 0 }: Singl
             isEditMode={isEditMode}
           />
         ))}
+        <PageDropZone pageIndex={pageStartIndex} isEditMode={isEditMode} />
       </div>
     </div>
   );

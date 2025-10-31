@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Save, X, Undo2, Redo2, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import PageThumbnailStrip from './PageThumbnailStrip';
-import DragDropProvider from './DragDropProvider';
+
 import { useEditHistory } from '@/hooks/useEditHistory';
 import {
   swapPhotos,
@@ -101,43 +101,46 @@ export default function EditMode({
     }
 
     // Handle photo swapping/moving
-    const sourceData = active.data.current;
-    const targetData = over.data.current;
+    const sourceData = active.data.current as { pageIndex: number; frameIndex: number } | undefined;
+    const targetData = over.data.current as { pageIndex: number; frameIndex?: number } | undefined;
 
     if (sourceData && targetData) {
+      const targetPageIndex = targetData.pageIndex;
+      const targetFrameIndex = typeof targetData.frameIndex === 'number' ? targetData.frameIndex : 0;
+
       // Check if it's a cross-page drag
-      if (sourceData.pageIndex !== targetData.pageIndex) {
+      if (sourceData.pageIndex !== targetPageIndex) {
         // Move photo with automatic layout adjustment
         const newPages = movePhotoWithLayoutAdjustment(
           workingPages,
           sourceData.pageIndex,
           sourceData.frameIndex,
-          targetData.pageIndex,
-          targetData.frameIndex,
+          targetPageIndex,
+          targetFrameIndex,
           photos
         );
         setWorkingPages(newPages);
         onPagesChange(newPages);
         addEntry({
           operation: 'move_photo_cross_page',
-          details: { source: sourceData, target: targetData },
+          details: { source: sourceData, target: { pageIndex: targetPageIndex, frameIndex: targetFrameIndex } },
         });
         toast.success('Photo moved and layouts adjusted');
-      } else {
+      } else if (typeof targetData.frameIndex === 'number') {
         // Same page swap
         const newPages = swapPhotos(
           workingPages,
           sourceData.pageIndex,
           sourceData.frameIndex,
-          targetData.pageIndex,
-          targetData.frameIndex,
+          targetPageIndex,
+          targetFrameIndex,
           photos
         );
         setWorkingPages(newPages);
         onPagesChange(newPages);
         addEntry({
           operation: 'swap_photos',
-          details: { source: sourceData, target: targetData },
+          details: { source: sourceData, target: { pageIndex: targetPageIndex, frameIndex: targetFrameIndex } },
         });
         toast.success('Photos swapped');
       }

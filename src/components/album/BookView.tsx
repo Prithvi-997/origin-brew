@@ -1,6 +1,6 @@
 import { AlbumPage } from "@/lib/types";
 import FrameEditor from "./FrameEditor";
-
+import PageDropZone from "./PageDropZone";
 interface BookViewProps {
   pages: AlbumPage[];
   isEditMode?: boolean;
@@ -15,7 +15,7 @@ const BookView = ({ pages, isEditMode = false, pageStartIndex = 0 }: BookViewPro
     <div className="flex justify-center items-start gap-1">
       {/* Left Page */}
       <div 
-        className="w-[500px] h-[600px] rounded-l-lg border bg-white shadow-2xl overflow-hidden relative"
+        className="w-[500px] h-[600px] rounded-l-lg border bg-white shadow-2xl overflow-hidden relative group"
       >
         {leftPage && (
           <>
@@ -33,6 +33,7 @@ const BookView = ({ pages, isEditMode = false, pageStartIndex = 0 }: BookViewPro
                 isEditMode={isEditMode}
               />
             ))}
+            <PageDropZone pageIndex={pageStartIndex} isEditMode={isEditMode} />
           </>
         )}
       </div>
@@ -42,7 +43,7 @@ const BookView = ({ pages, isEditMode = false, pageStartIndex = 0 }: BookViewPro
       
       {/* Right Page */}
       <div 
-        className="w-[500px] h-[600px] rounded-r-lg border bg-white shadow-2xl overflow-hidden relative"
+        className="w-[500px] h-[600px] rounded-r-lg border bg-white shadow-2xl overflow-hidden relative group"
       >
         {rightPage && (
           <>
@@ -60,6 +61,7 @@ const BookView = ({ pages, isEditMode = false, pageStartIndex = 0 }: BookViewPro
                 isEditMode={isEditMode}
               />
             ))}
+            <PageDropZone pageIndex={pageStartIndex + 1} isEditMode={isEditMode} />
           </>
         )}
       </div>
