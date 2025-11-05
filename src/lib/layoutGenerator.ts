@@ -88,7 +88,11 @@ function isGoodAspectMatch(photoAspect: number, frameAspect: number): boolean {
   return true;
 }
 
-function getScore(photo: Photo, frame: { aspect_ratio: number }): number {
+function getScore(
+  photo: Photo,
+  frame: { aspect_ratio: number },
+  allFrameAspects: number[]
+): number {
   const photoAspect = photo.aspectRatio || 1;
   const frameAspect = frame.aspect_ratio || 1;
   const aspectDiff = Math.abs(photoAspect - frameAspect);
@@ -100,6 +104,7 @@ function getScore(photo: Photo, frame: { aspect_ratio: number }): number {
   const isLandscapePhoto = photoAspect > 1.05;
   const isPortraitFrame = frameAspect < 0.95;
   const isLandscapeFrame = frameAspect > 1.05;
+  const isGroupPhoto = photoAspect > 1.2;
 
   // Penalize orientation mismatches
   if (
@@ -107,6 +112,16 @@ function getScore(photo: Photo, frame: { aspect_ratio: number }): number {
     (isLandscapePhoto && isPortraitFrame)
   ) {
     score *= 0.01; // Severe penalty
+  }
+
+  // Check if the frame is a "feature" frame (significantly larger aspect ratio)
+  const avgAspect =
+    allFrameAspects.reduce((a, b) => a + b, 0) / allFrameAspects.length;
+  const isFeatureFrame = frameAspect > avgAspect * 1.5;
+
+  // Boost score for group photos in feature frames
+  if (isGroupPhoto && isFeatureFrame) {
+    score *= 2.0; // Strong boost
   }
 
   return score;
@@ -123,11 +138,13 @@ function assignPhotosToFrames(
   }
 
   // Create a cost matrix where cost is the inverse of the score
+  const allFrameAspects = frames.map((f) => f.aspect_ratio);
   const costs: number[][] = [];
   for (let i = 0; i < frames.length; i++) {
     costs[i] = [];
     for (let j = 0; j < availablePhotos.length; j++) {
-      costs[i][j] = 1 / (1 + getScore(availablePhotos[j], frames[i]));
+      costs[i][j] =
+        1 / (1 + getScore(availablePhotos[j], frames[i], allFrameAspects));
     }
   }
 
