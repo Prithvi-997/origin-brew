@@ -1,0 +1,44 @@
+<svg width="500" height="600" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
+  <defs>
+    <!-- FRAME 1: Large Right Portrait -->
+    <clipPath id="clip1">
+      <!-- Reduced margins and increased frame size -->
+      <path d="M185 15 H490 V585 H185 Z"/>
+    </clipPath>
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="185" y="15" width="305" height="570">
+      <!-- Changed preserveAspectRatio to slice for proper fill -->
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="305" height="570" />
+    </pattern>
+
+    <!-- FRAME 2: Top Left -->
+    <clipPath id="clip2">
+      <!-- Reduced margins and increased frame size -->
+      <path d="M10 15 H175 V295 H10 Z"/>
+    </clipPath>
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="10" y="15" width="165" height="280">
+      <!-- Changed preserveAspectRatio to slice for proper fill -->
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="165" height="280" />
+    </pattern>
+
+    <!-- FRAME 3: Bottom Left -->
+    <clipPath id="clip3">
+      <!-- Reduced gap between frames -->
+      <path d="M10 305 H175 V585 H10 Z"/>
+    </clipPath>
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="10" y="305" width="165" height="280">
+      <!-- Changed preserveAspectRatio to slice for proper fill -->
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="165" height="280" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="600" fill="#fff"/>
+
+  <!-- Photo Frames -->
+  <g>
+    <!-- Updated paths to match new coordinates -->
+    <path d="M185 15 H490 V585 H185 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+    <path d="M10 15 H175 V295 H10 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+    <path d="M10 305 H175 V585 H10 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+  </g>
+</svg>
