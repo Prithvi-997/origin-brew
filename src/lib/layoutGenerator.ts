@@ -88,82 +88,78 @@ function isGoodAspectMatch(photoAspect: number, frameAspect: number): boolean {
   return true;
 }
 
+function getScore(photo: Photo, frame: { aspect_ratio: number }): number {
+  const photoAspect = photo.aspectRatio || 1;
+  const frameAspect = frame.aspect_ratio || 1;
+  const aspectDiff = Math.abs(photoAspect - frameAspect);
+
+  // Penalize aspect ratio differences heavily
+  let score = 1 / (1 + aspectDiff * aspectDiff);
+
+  const isPortraitPhoto = photoAspect < 0.95;
+  const isLandscapePhoto = photoAspect > 1.05;
+  const isPortraitFrame = frameAspect < 0.95;
+  const isLandscapeFrame = frameAspect > 1.05;
+
+  // Penalize orientation mismatches
+  if (
+    (isPortraitPhoto && isLandscapeFrame) ||
+    (isLandscapePhoto && isPortraitFrame)
+  ) {
+    score *= 0.01; // Severe penalty
+  }
+
+  return score;
+}
+
 function assignPhotosToFrames(
   photos: Photo[],
   frames: Array<{ id: number; aspect_ratio: number }>,
   usedPhotoIds: Set<string>
 ): Array<{ frameNumber: number; photoId: string }> | null {
-  const assignments: Array<{ frameNumber: number; photoId: string }> = [];
   const availablePhotos = photos.filter((p) => !usedPhotoIds.has(p.id));
-
   if (availablePhotos.length < frames.length) {
-    return null; // Not enough photos for this layout
+    return null;
   }
 
-  // Score each photo for each frame
-  const scores: Array<{ frameIdx: number; photoIdx: number; score: number }> =
-    [];
-
-  frames.forEach((frame, frameIdx) => {
-    for (let photoIdx = 0; photoIdx < availablePhotos.length; photoIdx++) {
-      const photo = availablePhotos[photoIdx];
-
-      const photoAspect = photo.aspectRatio || 1;
-      const frameAspect = frame.aspect_ratio || 1;
-      const aspectDiff = Math.abs(photoAspect - frameAspect);
-
-      const isLandscapePhoto = photoAspect > 1.2;
-      const isPortraitFrame = frameAspect < 0.85;
-
-      // Reject landscape photos in very narrow portrait frames
-      if (isLandscapePhoto && isPortraitFrame) {
-        continue;
-      }
-
-      // Scoring logic:
-      // Base score: closer aspect ratio is better
-      let score = 1 / (1 + aspectDiff);
-
-      // Boost score for matching orientations
-      const isPortraitPhoto = photoAspect < 1;
-      const isPortraitFrameLoose = frameAspect < 1;
-      if (
-        (isPortraitPhoto && isPortraitFrameLoose) ||
-        (!isPortraitPhoto && !isPortraitFrameLoose)
-      ) {
-        score *= 1.2; // Stronger boost for orientation match
-      }
-
-      // Penalize severe mismatches
-      if (aspectDiff > 0.5) score *= 0.3;
-      if (aspectDiff > 1.0) score *= 0.1;
-
-      scores.push({ frameIdx, photoIdx, score });
+  // Create a cost matrix where cost is the inverse of the score
+  const costs: number[][] = [];
+  for (let i = 0; i < frames.length; i++) {
+    costs[i] = [];
+    for (let j = 0; j < availablePhotos.length; j++) {
+      costs[i][j] = 1 / (1 + getScore(availablePhotos[j], frames[i]));
     }
-  });
-
-  // Greedy assignment: best matches first
-  scores.sort((a, b) => b.score - a.score);
-
-  const assignedFrames = new Set<number>();
-  const assignedPhotos = new Set<number>();
-
-  for (const { frameIdx, photoIdx } of scores) {
-    if (assignedFrames.has(frameIdx) || assignedPhotos.has(photoIdx)) continue;
-
-    assignments.push({
-      frameNumber: frames[frameIdx].id,
-      photoId: availablePhotos[photoIdx].id,
-    });
-
-    assignedFrames.add(frameIdx);
-    assignedPhotos.add(photoIdx);
-
-    if (assignments.length === frames.length) break;
   }
 
-  // Only return if we filled all frames
-  return assignments.length === frames.length ? assignments : null;
+  // Use a greedy approach for assignment
+  const assignments: Array<{ frameNumber: number; photoId: string }> = [];
+  const usedPhotoIndices = new Set<number>();
+
+  for (let i = 0; i < frames.length; i++) {
+    let bestPhotoIndex = -1;
+    let minCost = Infinity;
+
+    for (let j = 0; j < availablePhotos.length; j++) {
+      if (!usedPhotoIndices.has(j) && costs[i][j] < minCost) {
+        minCost = costs[i][j];
+        bestPhotoIndex = j;
+      }
+    }
+
+    if (bestPhotoIndex !== -1) {
+      assignments.push({
+        frameNumber: frames[i].id,
+        photoId: availablePhotos[bestPhotoIndex].id,
+      });
+      usedPhotoIndices.add(bestPhotoIndex);
+    }
+  }
+
+  if (assignments.length === frames.length) {
+    return assignments;
+  }
+
+  return null;
 }
 
 /**
@@ -205,6 +201,30 @@ function createPage(
 }
 
 /**
+ * Shuffles an array in place.
+ * @param array The array to shuffle.
+ */
+function shuffle<T>(array: T[]): T[] {
+  let currentIndex = array.length;
+  let randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
+/**
  * Deterministic fallback layout generation
  * Guarantees all photos are used exactly once
  */
@@ -232,7 +252,9 @@ export function generateAlbumPagesDeterministic(photos: Photo[]): AlbumPage[] {
     if (remainingPhotos.length === 0) break;
 
     let pageCreated = false;
-    for (const [layoutName, layout] of sortedLayouts) {
+    // Shuffle a copy of the layouts to ensure variety
+    const shuffledLayouts = shuffle([...sortedLayouts]);
+    for (const [layoutName, layout] of shuffledLayouts) {
       if (remainingPhotos.length < layout.frameCount) continue;
 
       const templateSvg = layoutTemplates[layoutName];
