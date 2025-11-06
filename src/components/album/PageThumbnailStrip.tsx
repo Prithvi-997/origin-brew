@@ -1,16 +1,16 @@
-import { AlbumPage } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
-import { useDroppable } from "@dnd-kit/core";
+import { AlbumPage } from "@/lib/types"
+import { cn } from "@/lib/utils"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVertical } from "lucide-react"
+import { useDroppable } from "@dnd-kit/core"
 
 interface PageThumbnailStripProps {
-  pages: AlbumPage[];
-  currentPage: number;
-  onPageSelect: (pageIndex: number) => void;
-  isEditMode: boolean;
-  isDraggingPhoto: boolean;
+  pages: AlbumPage[]
+  currentPage: number
+  onPageSelect: (pageIndex: number) => void
+  isEditMode: boolean
+  isDraggingPhoto: boolean
 }
 
 export default function PageThumbnailStrip({
@@ -38,26 +38,19 @@ export default function PageThumbnailStrip({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 interface PageThumbnailProps {
-  page: AlbumPage;
-  index: number;
-  isActive: boolean;
-  onClick: () => void;
-  isDraggable: boolean;
-  isDraggingPhoto: boolean;
+  page: AlbumPage
+  index: number
+  isActive: boolean
+  onClick: () => void
+  isDraggable: boolean
+  isDraggingPhoto: boolean
 }
 
-function PageThumbnail({
-  page,
-  index,
-  isActive,
-  onClick,
-  isDraggable,
-  isDraggingPhoto,
-}: PageThumbnailProps) {
+function PageThumbnail({ page, index, isActive, onClick, isDraggable, isDraggingPhoto }: PageThumbnailProps) {
   const {
     attributes,
     listeners,
@@ -71,7 +64,7 @@ function PageThumbnail({
     data: {
       type: "page",
     },
-  });
+  })
 
   const { isOver, setNodeRef: setDroppableRef } = useDroppable({
     id: `thumbnail-${page.id}`,
@@ -79,12 +72,17 @@ function PageThumbnail({
       pageIndex: index,
     },
     disabled: !isDraggingPhoto,
-  });
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+  }
+
+  const setRefs = (node: HTMLDivElement | null) => {
+    setSortableRef(node)
+    setDroppableRef(node)
+  }
 
   const setRefs = (node: HTMLDivElement | null) => {
     setSortableRef(node);
@@ -96,18 +94,13 @@ function PageThumbnail({
       ref={setRefs}
       style={style}
       {...attributes}
-      className={cn(
-        "flex-shrink-0 cursor-pointer transition-all",
-        isDragging && "opacity-50 scale-95"
-      )}
+      className={cn("flex-shrink-0 cursor-pointer transition-all", isDragging && "opacity-50 scale-95")}
     >
       <div
         className={cn(
           "w-24 h-28 rounded-lg border-2 overflow-hidden bg-white relative group",
-          isActive
-            ? "border-primary ring-2 ring-primary/20"
-            : "border-border hover:border-primary/50",
-          isOver && isDraggingPhoto && "ring-2 ring-green-500 border-green-500"
+          isActive ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50",
+          isOver && isDraggingPhoto && "ring-2 ring-green-500 border-green-500",
         )}
         onClick={onClick}
       >
@@ -133,5 +126,5 @@ function PageThumbnail({
         )}
       </div>
     </div>
-  );
+  )
 }

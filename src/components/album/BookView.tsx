@@ -126,6 +126,10 @@ const BookView = ({
               pageIndex={pageStartIndex + 1}
               isEditMode={isEditMode}
             />
+            <PageDropZone
+              pageIndex={pageStartIndex + 1}
+              isEditMode={isEditMode}
+            />
           </>
         )}
       </div>
