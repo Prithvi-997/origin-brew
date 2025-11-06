@@ -1,66 +1,68 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect, useRef } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Grid3x3, BookOpen, Pencil, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import type { Album as AlbumType, AlbumPage, Photo } from "@/lib/types"
-import { generateAlbumPagesWithAI } from "@/lib/layoutGenerator"
-import { analyzeImage } from "@/lib/imageAnalysis"
-import { filterDuplicateFiles } from "@/lib/duplicateDetection"
-import SinglePageView from "@/components/album/SinglePageView"
-import BookView from "@/components/album/BookView"
-import Header from "@/components/Header"
-import EditMode from "@/components/album/EditMode"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { toast } from "sonner"
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Grid3x3, BookOpen, Pencil, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { Album as AlbumType, AlbumPage, Photo } from "@/lib/types";
+import { generateAlbumPagesWithAI } from "@/lib/layoutGenerator";
+import { analyzeImage } from "@/lib/imageAnalysis";
+import { filterDuplicateFiles } from "@/lib/duplicateDetection";
+import SinglePageView from "@/components/album/SinglePageView";
+import BookView from "@/components/album/BookView";
+import Header from "@/components/Header";
+import EditMode from "@/components/album/EditMode";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
 
-type ViewMode = "single" | "book"
+type ViewMode = "single" | "book";
 
 const Album = () => {
-  const { albumId } = useParams<{ albumId: string }>()
-  const navigate = useNavigate()
-  const [album, setAlbum] = useState<AlbumType | null>(null)
-  const [pages, setPages] = useState<AlbumPage[]>([])
-  const [viewMode, setViewMode] = useState<ViewMode>("single")
-  const [currentPage, setCurrentPage] = useState(0)
-  const [isEditMode, setIsEditMode] = useState(false)
-  const [isAddingPhotos, setIsAddingPhotos] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { albumId } = useParams<{ albumId: string }>();
+  const navigate = useNavigate();
+  const [album, setAlbum] = useState<AlbumType | null>(null);
+  const [pages, setPages] = useState<AlbumPage[]>([]);
+  const [viewMode, setViewMode] = useState<ViewMode>("single");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isAddingPhotos, setIsAddingPhotos] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const loadAlbum = async () => {
       if (!albumId) {
-        toast.error("Album not found")
-        navigate("/")
-        return
+        toast.error("Album not found");
+        navigate("/");
+        return;
       }
 
       // Load album from localStorage (will use backend later)
-      const albumData = localStorage.getItem(`album-${albumId}`)
+      const albumData = localStorage.getItem(`album-${albumId}`);
       if (!albumData) {
-        toast.error("Album not found")
-        navigate("/")
-        return
+        toast.error("Album not found");
+        navigate("/");
+        return;
       }
 
-      const parsedAlbum = JSON.parse(albumData)
-      setAlbum(parsedAlbum)
+      const parsedAlbum = JSON.parse(albumData);
+      setAlbum(parsedAlbum);
 
       // Use precomputed pages if available, otherwise regenerate
       if (parsedAlbum.pages && parsedAlbum.pages.length > 0) {
-        setPages(parsedAlbum.pages)
+        setPages(parsedAlbum.pages);
       } else {
         // Fallback: regenerate from photos (shouldn't happen with new flow)
-        const generatedPages = await generateAlbumPagesWithAI(parsedAlbum.photos)
-        setPages(generatedPages)
+        const generatedPages = await generateAlbumPagesWithAI(
+          parsedAlbum.photos
+        );
+        setPages(generatedPages);
       }
-    }
+    };
 
-    loadAlbum()
-  }, [albumId, navigate])
+    loadAlbum();
+  }, [albumId, navigate]);
 
   if (!album || pages.length === 0) {
     return (
@@ -70,65 +72,80 @@ const Album = () => {
           <p className="text-muted-foreground">Loading your photobook...</p>
         </div>
       </div>
-    )
+    );
   }
 
-  const totalPages = pages.length
+  const totalPages = pages.length;
 
   const handleSaveEdit = (updatedPages: AlbumPage[]) => {
-    setPages(updatedPages)
+    setPages(updatedPages);
     if (album) {
       const updatedAlbum = {
         ...album,
         pages: updatedPages,
         lastModified: new Date(),
-      }
-      localStorage.setItem(`album-${albumId}`, JSON.stringify(updatedAlbum))
-      setAlbum(updatedAlbum)
+      };
+      localStorage.setItem(`album-${albumId}`, JSON.stringify(updatedAlbum));
+      setAlbum(updatedAlbum);
     }
-    setIsEditMode(false)
-  }
+    setIsEditMode(false);
+  };
 
   const handleCancelEdit = () => {
-    setIsEditMode(false)
-    toast.info("Edit cancelled")
-  }
+    setIsEditMode(false);
+    toast.info("Edit cancelled");
+  };
 
   const handleEnterEditMode = () => {
     if (viewMode !== "book") {
-      setViewMode("book")
+      setViewMode("book");
     }
-    setIsEditMode(true)
-  }
+    setIsEditMode(true);
+  };
 
   const handleAddPhotos = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
-  const handleNewPhotosUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    if (!files || files.length === 0 || !album) return
+  const handleNewPhotosUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (!files || files.length === 0 || !album) return;
 
     // Filter out duplicates
-    const { uniqueFiles, duplicates } = filterDuplicateFiles(files, album.photos)
+    const { uniqueFiles, duplicates } = filterDuplicateFiles(
+      files,
+      album.photos
+    );
 
     if (duplicates.length > 0) {
       toast.warning(
-        `Skipped ${duplicates.length} duplicate photo${duplicates.length > 1 ? "s" : ""}: ${duplicates.slice(0, 3).join(", ")}${duplicates.length > 3 ? "..." : ""}`,
-      )
+        `Skipped ${duplicates.length} duplicate photo${
+          duplicates.length > 1 ? "s" : ""
+        }: ${duplicates.slice(0, 3).join(", ")}${
+          duplicates.length > 3 ? "..." : ""
+        }`
+      );
     }
 
     if (uniqueFiles.length === 0) {
-      toast.error("All photos are already in the album")
-      return
+      toast.error("All photos are already in the album");
+      return;
     }
 
-    setIsAddingPhotos(true)
-    toast.info(`Adding ${uniqueFiles.length} new photo${uniqueFiles.length > 1 ? "s" : ""}...`)
+    setIsAddingPhotos(true);
+    toast.info(
+      `Adding ${uniqueFiles.length} new photo${
+        uniqueFiles.length > 1 ? "s" : ""
+      }...`
+    );
 
     try {
       // Analyze new photos
-      const newPhotoAnalysis = await Promise.all(uniqueFiles.map((file) => analyzeImage(file)))
+      const newPhotoAnalysis = await Promise.all(
+        uniqueFiles.map((file) => analyzeImage(file))
+      );
       const newPhotos: Photo[] = newPhotoAnalysis.map((analysis, index) => ({
         id: `photo-${Date.now()}-${index}`,
         url: URL.createObjectURL(uniqueFiles[index]),
@@ -138,13 +155,13 @@ const Album = () => {
         aspectRatio: analysis.aspectRatio,
         orientation: analysis.orientation,
         priority: analysis.priority,
-      }))
+      }));
 
       // Merge with existing photos
-      const allPhotos = [...album.photos, ...newPhotos]
+      const allPhotos = [...album.photos, ...newPhotos];
 
       // Regenerate entire album with AI
-      const newPages = await generateAlbumPagesWithAI(allPhotos)
+      const newPages = await generateAlbumPagesWithAI(allPhotos);
 
       // Update album with new photos and pages
       const updatedAlbum = {
@@ -152,24 +169,28 @@ const Album = () => {
         photos: allPhotos,
         pages: newPages,
         lastModified: new Date(),
-      }
+      };
 
-      localStorage.setItem(`album-${albumId}`, JSON.stringify(updatedAlbum))
-      setAlbum(updatedAlbum)
-      setPages(newPages)
-      setCurrentPage(0)
+      localStorage.setItem(`album-${albumId}`, JSON.stringify(updatedAlbum));
+      setAlbum(updatedAlbum);
+      setPages(newPages);
+      setCurrentPage(0);
 
-      toast.success(`Added ${uniqueFiles.length} photo${uniqueFiles.length > 1 ? "s" : ""} and regenerated album!`)
+      toast.success(
+        `Added ${uniqueFiles.length} photo${
+          uniqueFiles.length > 1 ? "s" : ""
+        } and regenerated album!`
+      );
     } catch (error) {
-      console.error("Error adding photos:", error)
-      toast.error("Failed to add photos")
+      console.error("Error adding photos:", error);
+      toast.error("Failed to add photos");
     } finally {
-      setIsAddingPhotos(false)
+      setIsAddingPhotos(false);
       if (fileInputRef.current) {
-        fileInputRef.current.value = ""
+        fileInputRef.current.value = "";
       }
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -179,7 +200,12 @@ const Album = () => {
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/")}
+              className="gap-2"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back to Albums
             </Button>
@@ -187,7 +213,9 @@ const Album = () => {
 
           <div className="text-center">
             <h1 className="text-2xl font-semibold">{album.title}</h1>
-            {album.subtitle && <p className="text-sm text-muted-foreground">{album.subtitle}</p>}
+            {album.subtitle && (
+              <p className="text-sm text-muted-foreground">{album.subtitle}</p>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -207,7 +235,11 @@ const Album = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => setViewMode((prev) => (prev === "single" ? "book" : "single"))}
+                  onClick={() =>
+                    setViewMode((prev) =>
+                      prev === "single" ? "book" : "single"
+                    )
+                  }
                   className="gap-2"
                 >
                   {viewMode === "single" ? (
@@ -224,7 +256,11 @@ const Album = () => {
                 </Button>
 
                 {viewMode === "book" && (
-                  <Button size="sm" onClick={handleEnterEditMode} className="gap-2">
+                  <Button
+                    size="sm"
+                    onClick={handleEnterEditMode}
+                    className="gap-2"
+                  >
                     <Pencil className="h-4 w-4" />
                     Edit
                   </Button>
@@ -236,7 +272,9 @@ const Album = () => {
       </div>
 
       {/* Main Content */}
-      <div className={`container mx-auto px-6 py-8 ${isEditMode ? "pb-32" : ""}`}>
+      <div
+        className={`container mx-auto px-6 py-8 ${isEditMode ? "pb-32" : ""}`}
+      >
         {isEditMode ? (
           <EditMode
             pages={pages}
@@ -254,12 +292,16 @@ const Album = () => {
               {viewMode === "single"
                 ? pages.map((page, index) => (
                     <div key={index} className="scroll-snap-start">
-                      <SinglePageView pages={[page]} isEditMode={isEditMode} pageStartIndex={index} />
+                      <SinglePageView
+                        pages={[page]}
+                        isEditMode={isEditMode}
+                        pageStartIndex={index}
+                      />
                     </div>
                   ))
                 : Array.from({ length: Math.ceil(totalPages / 2) }, (_, i) => {
-                    const leftPage = pages[i * 2]
-                    const rightPage = pages[i * 2 + 1]
+                    const leftPage = pages[i * 2];
+                    const rightPage = pages[i * 2 + 1];
                     return (
                       <div key={i} className="scroll-snap-start">
                         <BookView
@@ -268,7 +310,7 @@ const Album = () => {
                           pageStartIndex={i * 2}
                         />
                       </div>
-                    )
+                    );
                   })}
             </div>
           </ScrollArea>
@@ -285,7 +327,7 @@ const Album = () => {
         className="hidden"
       />
     </div>
-  )
-}
+  );
+};
 
-export default Album
+export default Album;

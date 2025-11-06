@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 import {
   DndContext,
   type DragEndEvent,
@@ -13,64 +13,72 @@ import {
   useSensor,
   useSensors,
   type DragMoveEvent,
-} from "@dnd-kit/core"
+} from "@dnd-kit/core";
 
 interface DragDropProviderProps {
-  children: ReactNode
-  onDragStart?: (event: DragStartEvent) => void
-  onDragEnd?: (event: DragEndEvent) => void
-  overlay?: ReactNode
+  children: ReactNode;
+  onDragStart?: (event: DragStartEvent) => void;
+  onDragEnd?: (event: DragEndEvent) => void;
+  overlay?: ReactNode;
 }
 
-export default function DragDropProvider({ children, onDragStart, onDragEnd, overlay }: DragDropProviderProps) {
+export default function DragDropProvider({
+  children,
+  onDragStart,
+  onDragEnd,
+  overlay,
+}: DragDropProviderProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
       },
-    }),
-  )
+    })
+  );
 
   const handleDragMove = (event: DragMoveEvent) => {
-    const { delta } = event
-    const scrollContainer = document.querySelector(".scroll-area-viewport")
+    const { delta } = event;
+    const scrollContainer = document.querySelector(".scroll-area-viewport");
 
-    if (!scrollContainer) return
+    if (!scrollContainer) return;
 
-    const rect = scrollContainer.getBoundingClientRect()
-    const scrollThreshold = 100 // pixels from edge to trigger scroll
-    const scrollSpeed = 10 // pixels per frame
+    const rect = scrollContainer.getBoundingClientRect();
+    const scrollThreshold = 100; // pixels from edge to trigger scroll
+    const scrollSpeed = 10; // pixels per frame
 
     // Get cursor position relative to viewport
-    const cursorY = event.activatorEvent instanceof MouseEvent ? event.activatorEvent.clientY : 0
+    const cursorY =
+      event.activatorEvent instanceof MouseEvent
+        ? event.activatorEvent.clientY
+        : 0;
 
     // Scroll up if near top
     if (cursorY < rect.top + scrollThreshold) {
-      scrollContainer.scrollBy({ top: -scrollSpeed, behavior: "auto" })
+      scrollContainer.scrollBy({ top: -scrollSpeed, behavior: "auto" });
     }
 
     // Scroll down if near bottom
     if (cursorY > rect.bottom - scrollThreshold) {
-      scrollContainer.scrollBy({ top: scrollSpeed, behavior: "auto" })
+      scrollContainer.scrollBy({ top: scrollSpeed, behavior: "auto" });
     }
-  }
+  };
 
   const collisionDetectionStrategy = (args: any) => {
     // First, try to find droppables where the pointer is directly over
-    const pointerCollisions = pointerWithin(args)
+    const pointerCollisions = pointerWithin(args);
     if (pointerCollisions.length > 0) {
-      return pointerCollisions
+      return pointerCollisions;
     }
 
     // Then try rectangle intersection
-    const intersectionCollisions = rectIntersection(args)
+    const intersectionCollisions = rectIntersection(args);
     if (intersectionCollisions.length > 0) {
-      return intersectionCollisions
+      return intersectionCollisions;
     }
 
     // Finally fall back to closest center
-    return closestCenter(args)
-  }
+    return closestCenter(args);
+  };
 
   return (
     <DndContext
@@ -83,5 +91,5 @@ export default function DragDropProvider({ children, onDragStart, onDragEnd, ove
       {children}
       <DragOverlay>{overlay}</DragOverlay>
     </DndContext>
-  )
+  );
 }
