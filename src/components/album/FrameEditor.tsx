@@ -16,7 +16,6 @@ interface FrameEditorProps {
   onRemovePhoto?: () => void;
   style?: React.CSSProperties;
   isDraggingAny?: boolean;
-  isSourcePage?: boolean;
 }
 
 export default function FrameEditor({
@@ -28,7 +27,6 @@ export default function FrameEditor({
   onRemovePhoto,
   style,
   isDraggingAny = false,
-  isSourcePage = false,
 }: FrameEditorProps) {
   console.log("[v0] FrameEditor render:", {
     frameId,
@@ -38,7 +36,6 @@ export default function FrameEditor({
     isEditMode,
     style,
     isDraggingAny,
-    isSourcePage,
   });
 
   const dragId = `photo-${pageIndex}-${frameIndex}`;
@@ -88,7 +85,7 @@ export default function FrameEditor({
 
   if (!isEditMode) return null;
 
-  const showAsDropTarget = isDraggingAny && !isDragging && !isSourcePage;
+  const showAsDropTarget = isDraggingAny && !isDragging;
 
   return (
     <div
@@ -100,13 +97,14 @@ export default function FrameEditor({
       }}
       {...attributes}
       {...listeners}
+      data-testid={`frame-editor-${pageIndex}-${frameIndex}`}
       className={cn(
         "group transition-all duration-200",
         photoUrl ? "cursor-move" : "cursor-default",
         isOver && "ring-2 ring-primary ring-inset",
         isDragging && "opacity-30",
-        isDraggingAny && isSourcePage && !isDragging && "opacity-40",
-        isDraggingAny && !isSourcePage && "ring-1 ring-primary/30 ring-inset"
+        isDraggingAny && !isDragging && "opacity-40",
+        isDraggingAny && "ring-1 ring-primary/30 ring-inset"
       )}
     >
       {photoUrl && (
