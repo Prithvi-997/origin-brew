@@ -1,22 +1,21 @@
-"use client"
+"use client";
 
-import { useDroppable } from "@dnd-kit/core"
-import { useDraggable } from "@dnd-kit/core"
-import { cn } from "@/lib/utils"
-import { Trash2, Move } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import type React from "react"
+import { useDroppable } from "@dnd-kit/core";
+import { useDraggable } from "@dnd-kit/core";
+import { cn } from "@/lib/utils";
+import { Trash2, Move } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type React from "react";
 
 interface FrameEditorProps {
-  frameId: string
-  pageIndex: number
-  frameIndex: number
-  photoUrl?: string
-  isEditMode: boolean
-  onRemovePhoto?: () => void
-  style?: React.CSSProperties
-  isDraggingAny?: boolean
-  isSourcePage?: boolean
+  frameId: string;
+  pageIndex: number;
+  frameIndex: number;
+  photoUrl?: string;
+  isEditMode: boolean;
+  onRemovePhoto?: () => void;
+  style?: React.CSSProperties;
+  isDraggingAny?: boolean;
 }
 
 export default function FrameEditor({
@@ -28,7 +27,6 @@ export default function FrameEditor({
   onRemovePhoto,
   style,
   isDraggingAny = false,
-  isSourcePage = false,
 }: FrameEditorProps) {
   console.log("[v0] FrameEditor render:", {
     frameId,
@@ -38,11 +36,10 @@ export default function FrameEditor({
     isEditMode,
     style,
     isDraggingAny,
-    isSourcePage,
-  })
+  });
 
-  const dragId = `photo-${pageIndex}-${frameIndex}`
-  const dropId = `frame-${pageIndex}-${frameIndex}`
+  const dragId = `photo-${pageIndex}-${frameIndex}`;
+  const dropId = `frame-${pageIndex}-${frameIndex}`;
 
   const {
     attributes,
@@ -57,13 +54,13 @@ export default function FrameEditor({
       photoUrl,
     },
     disabled: !isEditMode || !photoUrl,
-  })
+  });
 
   console.log("[v0] FrameEditor drag state:", {
     dragId,
     isDragging,
     disabled: !isEditMode || !photoUrl,
-  })
+  });
 
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: dropId,
@@ -73,22 +70,22 @@ export default function FrameEditor({
       photoUrl,
     },
     disabled: !isEditMode,
-  })
+  });
 
   console.log("[v0] FrameEditor drop state:", {
     dropId,
     isOver,
     disabled: !isEditMode,
-  })
+  });
 
   const setRefs = (node: HTMLDivElement | null) => {
-    setDragRef(node)
-    setDropRef(node)
-  }
+    setDragRef(node);
+    setDropRef(node);
+  };
 
-  if (!isEditMode) return null
+  if (!isEditMode) return null;
 
-  const showAsDropTarget = isDraggingAny && !isDragging && !isSourcePage
+  const showAsDropTarget = isDraggingAny && !isDragging;
 
   return (
     <div
@@ -100,13 +97,14 @@ export default function FrameEditor({
       }}
       {...attributes}
       {...listeners}
+      data-testid={`frame-editor-${pageIndex}-${frameIndex}`}
       className={cn(
         "group transition-all duration-200",
         photoUrl ? "cursor-move" : "cursor-default",
         isOver && "ring-2 ring-primary ring-inset",
         isDragging && "opacity-30",
-        isDraggingAny && isSourcePage && !isDragging && "opacity-40",
-        isDraggingAny && !isSourcePage && "ring-1 ring-primary/30 ring-inset",
+        isDraggingAny && !isDragging && "opacity-40",
+        isDraggingAny && "ring-1 ring-primary/30 ring-inset"
       )}
     >
       {photoUrl && (
@@ -116,8 +114,8 @@ export default function FrameEditor({
             variant="secondary"
             className="h-8 w-8 pointer-events-auto"
             onClick={(e) => {
-              e.stopPropagation()
-              onRemovePhoto?.()
+              e.stopPropagation();
+              onRemovePhoto?.();
             }}
           >
             <Trash2 className="h-4 w-4" />
@@ -132,14 +130,21 @@ export default function FrameEditor({
         <div
           className={cn(
             "absolute inset-0 border-2 border-dashed flex items-center justify-center transition-all",
-            isOver ? "bg-primary/20 border-primary" : "bg-primary/5 border-primary/30",
+            isOver
+              ? "bg-primary/20 border-primary"
+              : "bg-primary/5 border-primary/30"
           )}
         >
-          <span className={cn("text-xs font-medium", isOver ? "text-primary" : "text-primary/50")}>
+          <span
+            className={cn(
+              "text-xs font-medium",
+              isOver ? "text-primary" : "text-primary/50"
+            )}
+          >
             {isOver ? "Drop here" : "Drop zone"}
           </span>
         </div>
       )}
     </div>
-  )
+  );
 }

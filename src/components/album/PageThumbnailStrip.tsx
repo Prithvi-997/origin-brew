@@ -84,6 +84,11 @@ function PageThumbnail({ page, index, isActive, onClick, isDraggable, isDragging
     setDroppableRef(node)
   }
 
+  const setRefs = (node: HTMLDivElement | null) => {
+    setSortableRef(node);
+    setDroppableRef(node);
+  };
+
   return (
     <div
       ref={setRefs}

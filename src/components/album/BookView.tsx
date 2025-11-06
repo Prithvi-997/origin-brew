@@ -2,11 +2,11 @@ import { AlbumPage } from "@/lib/types";
 import FrameEditor from "./FrameEditor";
 import PageDropZone from "./PageDropZone";
 interface BookViewProps {
-  pages: AlbumPage[]
-  isEditMode?: boolean
-  pageStartIndex?: number
-  isDraggingAny?: boolean
-  dragSourcePageIndex?: number
+  pages: AlbumPage[];
+  isEditMode?: boolean;
+  pageStartIndex?: number;
+  isDraggingAny?: boolean;
+  dragSourcePageIndex?: number;
 }
 
 const BookView = ({
@@ -16,8 +16,8 @@ const BookView = ({
   isDraggingAny = false,
   dragSourcePageIndex = -1,
 }: BookViewProps) => {
-  const leftPage = pages[0]
-  const rightPage = pages[1]
+  const leftPage = pages[0];
+  const rightPage = pages[1];
 
   console.log("[v0] BookView render:", {
     pageStartIndex,
@@ -28,13 +28,16 @@ const BookView = ({
     rightPageFrameCount: rightPage?.frameCoordinates?.length || 0,
     leftPageLayout: leftPage?.layoutName,
     rightPageLayout: rightPage?.layoutName,
-  })
+  });
 
   if (leftPage?.frameCoordinates) {
-    console.log("[v0] Left page frame coordinates:", leftPage.frameCoordinates)
+    console.log("[v0] Left page frame coordinates:", leftPage.frameCoordinates);
   }
   if (rightPage?.frameCoordinates) {
-    console.log("[v0] Right page frame coordinates:", rightPage.frameCoordinates)
+    console.log(
+      "[v0] Right page frame coordinates:",
+      rightPage.frameCoordinates
+    );
   }
 
   return (
@@ -57,17 +60,30 @@ const BookView = ({
               }}
               className={isEditMode ? "[&_*]:pointer-events-none" : ""}
             />
-            {isEditMode && leftPage.photoIds && leftPage.photoIds.map((photoId, frameIndex) => (
-              <FrameEditor
-                key={`frame-${pageStartIndex}-${frameIndex}`}
-                frameId={`frame-${pageStartIndex}-${frameIndex}`}
-                pageIndex={pageStartIndex}
-                frameIndex={frameIndex}
-                photoUrl={photoId}
-                isEditMode={isEditMode}
-              />
-            ))}
-            <PageDropZone pageIndex={pageStartIndex} isEditMode={isEditMode} />
+            {isEditMode &&
+              leftPage.frameCoordinates &&
+              leftPage.frameCoordinates.map((frame, frameIndex) => (
+                <FrameEditor
+                  key={`frame-${pageStartIndex}-${frameIndex}`}
+                  frameId={`frame-${pageStartIndex}-${frameIndex}`}
+                  pageIndex={pageStartIndex}
+                  frameIndex={frameIndex}
+                  photoUrl={leftPage.photoIds?.[frameIndex]}
+                  isEditMode={isEditMode}
+                  style={{
+                    position: "absolute",
+                    left: `${frame.x}%`,
+                    top: `${frame.y}%`,
+                    width: `${frame.width}%`,
+                    height: `${frame.height}%`,
+                  }}
+                  isDraggingAny={isDraggingAny}
+                />
+              ))}
+            <PageDropZone
+              pageIndex={pageStartIndex}
+              isEditMode={isEditMode}
+            />
           </>
         )}
       </div>
@@ -93,22 +109,35 @@ const BookView = ({
               }}
               className={isEditMode ? "[&_*]:pointer-events-none" : ""}
             />
-            {isEditMode && rightPage.photoIds && rightPage.photoIds.map((photoId, frameIndex) => (
-              <FrameEditor
-                key={`frame-${pageStartIndex + 1}-${frameIndex}`}
-                frameId={`frame-${pageStartIndex + 1}-${frameIndex}`}
-                pageIndex={pageStartIndex + 1}
-                frameIndex={frameIndex}
-                photoUrl={photoId}
-                isEditMode={isEditMode}
-              />
-            ))}
-            <PageDropZone pageIndex={pageStartIndex + 1} isEditMode={isEditMode} />
+            {isEditMode &&
+              rightPage.frameCoordinates &&
+              rightPage.frameCoordinates.map((frame, frameIndex) => (
+                <FrameEditor
+                  key={`frame-${pageStartIndex + 1}-${frameIndex}`}
+                  frameId={`frame-${pageStartIndex + 1}-${frameIndex}`}
+                  pageIndex={pageStartIndex + 1}
+                  frameIndex={frameIndex}
+                  photoUrl={rightPage.photoIds?.[frameIndex]}
+                  isEditMode={isEditMode}
+                  style={{
+                    position: "absolute",
+                    left: `${frame.x}%`,
+                    top: `${frame.y}%`,
+                    width: `${frame.width}%`,
+                    height: `${frame.height}%`,
+                  }}
+                  isDraggingAny={isDraggingAny}
+                />
+              ))}
+            <PageDropZone
+              pageIndex={pageStartIndex + 1}
+              isEditMode={isEditMode}
+            />
           </>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BookView
+export default BookView;

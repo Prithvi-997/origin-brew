@@ -22,17 +22,29 @@ const SinglePageView = ({ pages, isEditMode = false, pageStartIndex = 0 }: Singl
           dangerouslySetInnerHTML={{ __html: page.svgContent }}
           style={{ width: '100%', height: '100%' }}
         />
-        {isEditMode && page.photoIds && page.photoIds.map((photoId, frameIndex) => (
-          <FrameEditor
-            key={`frame-${pageStartIndex}-${frameIndex}`}
-            frameId={`frame-${pageStartIndex}-${frameIndex}`}
-            pageIndex={pageStartIndex}
-            frameIndex={frameIndex}
-            photoUrl={photoId}
-            isEditMode={isEditMode}
-          />
-        ))}
-        <PageDropZone pageIndex={pageStartIndex} isEditMode={isEditMode} />
+        {isEditMode &&
+          page.frameCoordinates &&
+          page.frameCoordinates.map((frame, frameIndex) => (
+            <FrameEditor
+              key={`frame-${pageStartIndex}-${frameIndex}`}
+              frameId={`frame-${pageStartIndex}-${frameIndex}`}
+              pageIndex={pageStartIndex}
+              frameIndex={frameIndex}
+              photoUrl={page.photoIds?.[frameIndex]}
+              isEditMode={isEditMode}
+              style={{
+                position: "absolute",
+                left: `${frame.x}%`,
+                top: `${frame.y}%`,
+                width: `${frame.width}%`,
+                height: `${frame.height}%`,
+              }}
+            />
+          ))}
+        <PageDropZone
+          pageIndex={pageStartIndex}
+          isEditMode={isEditMode}
+        />
       </div>
     </div>
   );
