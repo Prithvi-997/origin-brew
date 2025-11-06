@@ -18,16 +18,14 @@ import {
 } from '@dnd-kit/sortable';
 
 interface EditModeProps {
-  pages: AlbumPage[];
-  photos: Photo[];
-  currentPage: number;
-  onPagesChange: (pages: AlbumPage[]) => void;
-  onCurrentPageChange: (page: number) => void;
-  onSave: (pages: AlbumPage[]) => void;
-  onCancel: () => void;
-  viewMode: 'single' | 'book';
-  onDragStart: (event: DragStartEvent) => void;
-  onDragEnd: (event: DragEndEvent) => void;
+  pages: AlbumPage[]
+  photos: Photo[]
+  currentPage: number
+  onPagesChange: (pages: AlbumPage[]) => void
+  onCurrentPageChange: (page: number) => void
+  onSave: (pages: AlbumPage[]) => void
+  onCancel: () => void
+  viewMode: "single" | "book"
 }
 
 export default function EditMode({
@@ -39,65 +37,62 @@ export default function EditMode({
   onSave,
   onCancel,
   viewMode,
-  onDragStart: parentOnDragStart,
-  onDragEnd: parentOnDragEnd,
 }: EditModeProps) {
-  const [workingPages, setWorkingPages] = useState(pages);
-  const [draggedItem, setDraggedItem] = useState<any>(null);
+  const [workingPages, setWorkingPages] = useState(pages)
+  const [draggedItem, setDraggedItem] = useState<any>(null)
 
-  const { canUndo, canRedo, addEntry, undo, redo } = useEditHistory();
+  const { canUndo, canRedo, addEntry, undo, redo } = useEditHistory()
 
   const handleSave = () => {
-    onPagesChange(workingPages);
-    onSave(workingPages);
-    toast.success('Changes saved successfully');
-  };
+    onPagesChange(workingPages)
+    onSave(workingPages)
+    toast.success("Changes saved successfully")
+  }
 
   const handleUndo = () => {
-    const entry = undo();
+    const entry = undo()
     if (entry) {
-      // Implement undo logic based on operation type
-      toast.info('Undo: ' + entry.operation);
+      toast.info("Undo: " + entry.operation)
     }
-  };
+  }
 
   const handleRedo = () => {
-    const entry = redo();
+    const entry = redo()
     if (entry) {
-      // Implement redo logic based on operation type
-      toast.info('Redo: ' + entry.operation);
+      toast.info("Redo: " + entry.operation)
     }
-  };
-
+  }
 
   const handleDragStart = (event: DragStartEvent) => {
-    setDraggedItem(event.active.data.current);
-    parentOnDragStart(event);
-  };
+    setDraggedItem(event.active.data.current)
+    console.log("[v0] Drag started:", event.active.data.current)
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    setDraggedItem(null);
-    parentOnDragEnd(event);
+    const { active, over } = event
+    setDraggedItem(null)
 
-    if (!over) return;
+    if (!over) return
+
+    const sourceType = active.data.current?.type
+    const overType = over.data.current?.type
 
     // Handle page reordering
-    if (active.id.toString().startsWith('page-')) {
-      const oldIndex = workingPages.findIndex(p => p.id === active.id);
-      const newIndex = workingPages.findIndex(p => p.id === over.id);
-      
+    if (sourceType === "page" && overType === "page") {
+      const oldIndex = workingPages.findIndex((p) => `page-${p.id}` === active.id)
+      const newIndex = workingPages.findIndex((p) => `page-${p.id}` === over.id)
+
       if (oldIndex !== newIndex) {
-        const newPages = reorderPages(workingPages, oldIndex, newIndex);
-        setWorkingPages(newPages);
-        onPagesChange(newPages);
+        const newPages = reorderPages(workingPages, oldIndex, newIndex)
+        setWorkingPages(newPages)
+        onPagesChange(newPages)
         addEntry({
-          operation: 'reorder_pages',
+          operation: "reorder_pages",
           details: { from: oldIndex, to: newIndex },
-        });
-        toast.success('Pages reordered');
+        })
+        toast.success("Pages reordered")
       }
-      return;
+      return
     }
 
     // Handle photo swapping/moving
@@ -145,10 +140,19 @@ export default function EditMode({
         toast.success('Photos swapped');
       }
     }
-  };
+  }
+
+  const totalPages = workingPages.length
+  const isDraggingPhoto = !!(draggedItem && "photoUrl" in draggedItem)
+
+  const dragOverlay = draggedItem?.photoUrl ? (
+    <div className="w-32 h-32 rounded-lg overflow-hidden shadow-2xl border-2 border-primary opacity-80">
+      <img src={draggedItem.photoUrl || "/placeholder.svg"} alt="Dragging" className="w-full h-full object-cover" />
+    </div>
+  ) : null
 
   return (
-    <>
+    <DragDropProvider onDragStart={handleDragStart} onDragEnd={handleDragEnd} overlay={dragOverlay}>
       {/* Edit Mode Toolbar */}
       <div className="fixed top-16 left-0 right-0 bg-primary/10 backdrop-blur border-b z-50">
         <div className="container mx-auto px-6 py-3 flex items-center justify-between">
@@ -158,21 +162,11 @@ export default function EditMode({
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleUndo}
-              disabled={!canUndo}
-            >
+            <Button variant="outline" size="sm" onClick={handleUndo} disabled={!canUndo}>
               <Undo2 className="h-4 w-4 mr-2" />
               Undo
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRedo}
-              disabled={!canRedo}
-            >
+            <Button variant="outline" size="sm" onClick={handleRedo} disabled={!canRedo}>
               <Redo2 className="h-4 w-4 mr-2" />
               Redo
             </Button>
@@ -189,14 +183,38 @@ export default function EditMode({
       </div>
 
       {/* Page Thumbnails */}
-      <SortableContext items={workingPages.map(p => p.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={workingPages.map((p) => `page-${p.id}`)}
+        strategy={verticalListSortingStrategy}
+      >
         <PageThumbnailStrip
           pages={workingPages}
           currentPage={currentPage}
           onPageSelect={onCurrentPageChange}
           isEditMode={true}
+          isDraggingPhoto={isDraggingPhoto}
         />
       </SortableContext>
-    </>
-  );
+
+      <ScrollArea className="h-[calc(100vh-220px)] scroll-area-viewport">
+        <div className="space-y-8 pb-8">
+          {Array.from({ length: Math.ceil(totalPages / 2) }, (_, i) => {
+            const leftPage = workingPages[i * 2]
+            const rightPage = workingPages[i * 2 + 1]
+            return (
+              <div key={i} className="scroll-snap-start">
+                <BookView
+                  pages={[leftPage, rightPage].filter(Boolean)}
+                  isEditMode={true}
+                  pageStartIndex={i * 2}
+                  isDraggingAny={!!draggedItem}
+                  dragSourcePageIndex={draggedItem?.pageIndex ?? -1}
+                />
+              </div>
+            )
+          })}
+        </div>
+      </ScrollArea>
+    </DragDropProvider>
+  )
 }

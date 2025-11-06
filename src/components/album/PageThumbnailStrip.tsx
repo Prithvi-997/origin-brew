@@ -1,14 +1,16 @@
-import { AlbumPage } from '@/lib/types';
-import { cn } from '@/lib/utils';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { GripVertical } from 'lucide-react';
+import { AlbumPage } from "@/lib/types"
+import { cn } from "@/lib/utils"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVertical } from "lucide-react"
+import { useDroppable } from "@dnd-kit/core"
 
 interface PageThumbnailStripProps {
-  pages: AlbumPage[];
-  currentPage: number;
-  onPageSelect: (pageIndex: number) => void;
-  isEditMode: boolean;
+  pages: AlbumPage[]
+  currentPage: number
+  onPageSelect: (pageIndex: number) => void
+  isEditMode: boolean
+  isDraggingPhoto: boolean
 }
 
 export default function PageThumbnailStrip({
@@ -16,6 +18,7 @@ export default function PageThumbnailStrip({
   currentPage,
   onPageSelect,
   isEditMode,
+  isDraggingPhoto,
 }: PageThumbnailStripProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t py-4 z-40">
@@ -29,54 +32,70 @@ export default function PageThumbnailStrip({
               isActive={currentPage === index}
               onClick={() => onPageSelect(index)}
               isDraggable={isEditMode}
+              isDraggingPhoto={isDraggingPhoto}
             />
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 interface PageThumbnailProps {
-  page: AlbumPage;
-  index: number;
-  isActive: boolean;
-  onClick: () => void;
-  isDraggable: boolean;
+  page: AlbumPage
+  index: number
+  isActive: boolean
+  onClick: () => void
+  isDraggable: boolean
+  isDraggingPhoto: boolean
 }
 
-function PageThumbnail({ page, index, isActive, onClick, isDraggable }: PageThumbnailProps) {
+function PageThumbnail({ page, index, isActive, onClick, isDraggable, isDraggingPhoto }: PageThumbnailProps) {
   const {
     attributes,
     listeners,
-    setNodeRef,
+    setNodeRef: setSortableRef,
     transform,
     transition,
     isDragging,
   } = useSortable({
-    id: page.id,
+    id: `page-${page.id}`,
     disabled: !isDraggable,
-  });
+    data: {
+      type: "page",
+    },
+  })
+
+  const { isOver, setNodeRef: setDroppableRef } = useDroppable({
+    id: `thumbnail-${page.id}`,
+    data: {
+      pageIndex: index,
+    },
+    disabled: !isDraggingPhoto,
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+  }
+
+  const setRefs = (node: HTMLDivElement | null) => {
+    setSortableRef(node)
+    setDroppableRef(node)
+  }
 
   return (
     <div
-      ref={setNodeRef}
+      ref={setRefs}
       style={style}
       {...attributes}
-      className={cn(
-        "flex-shrink-0 cursor-pointer transition-all",
-        isDragging && "opacity-50 scale-95"
-      )}
+      className={cn("flex-shrink-0 cursor-pointer transition-all", isDragging && "opacity-50 scale-95")}
     >
       <div
         className={cn(
           "w-24 h-28 rounded-lg border-2 overflow-hidden bg-white relative group",
-          isActive ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"
+          isActive ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50",
+          isOver && isDraggingPhoto && "ring-2 ring-green-500 border-green-500",
         )}
         onClick={onClick}
       >
@@ -95,7 +114,12 @@ function PageThumbnail({ page, index, isActive, onClick, isDraggable }: PageThum
             <GripVertical className="h-3 w-3 text-white" />
           </div>
         )}
+        {isOver && isDraggingPhoto && (
+          <div className="absolute inset-0 bg-green-500/30 flex items-center justify-center">
+            <span className="text-white font-bold text-sm">Drop Here</span>
+          </div>
+        )}
       </div>
     </div>
-  );
+  )
 }

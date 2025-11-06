@@ -1,0 +1,33 @@
+<svg width="500" height="600" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
+  <defs>
+    <!-- FRAME 1: Left Portrait -->
+    <clipPath id="clip1">
+      <!-- Reduced margins and gap between frames from 25px to 10px -->
+      <path d="M10 30 H245 V570 H10 Z"/>
+    </clipPath>
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="10" y="30" width="235" height="540">
+      <!-- Changed preserveAspectRatio to slice for proper fill -->
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="235" height="540" />
+    </pattern>
+
+    <!-- FRAME 2: Right Portrait -->
+    <clipPath id="clip2">
+      <!-- Reduced gap between frames from 25px to 10px -->
+      <path d="M255 30 H490 V570 H255 Z"/>
+    </clipPath>
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="255" y="30" width="235" height="540">
+      <!-- Changed preserveAspectRatio to slice for proper fill -->
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="235" height="540" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="500" height="600" fill="#f7f7f7"/>
+
+  <!-- Photo Frames -->
+  <g>
+    <!-- Updated paths to match new coordinates -->
+    <path d="M10 30 H245 V570 H10 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+    <path d="M255 30 H490 V570 H255 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+  </g>
+</svg>
