@@ -68,6 +68,9 @@ export interface DraggedPhoto {
 }
 
 export interface LayoutFrame {
-  id: string;
+  id: number;
   aspect_ratio: number;
+  width?: number;
+  height?: number;
+  area?: number;
 }

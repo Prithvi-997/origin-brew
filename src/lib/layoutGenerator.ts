@@ -90,38 +90,34 @@ function isGoodAspectMatch(photoAspect: number, frameAspect: number): boolean {
 
 function getScore(
   photo: Photo,
-  frame: { aspect_ratio: number },
-  allFrameAspects: number[]
+  frame: { aspect_ratio: number; area?: number }
 ): number {
   const photoAspect = photo.aspectRatio || 1;
   const frameAspect = frame.aspect_ratio || 1;
   const aspectDiff = Math.abs(photoAspect - frameAspect);
 
-  // Penalize aspect ratio differences heavily
+  // Base score: aspect ratio match
   let score = 1 / (1 + aspectDiff * aspectDiff);
+
+  const isGroupPhoto = photoAspect > 1.2;
+  const frameArea = frame.area || 0;
+
+  // Boost score for group photos in large frames
+  if (isGroupPhoto) {
+    score *= 1 + frameArea / 50000; // Boost proportional to area
+  }
 
   const isPortraitPhoto = photoAspect < 0.95;
   const isLandscapePhoto = photoAspect > 1.05;
   const isPortraitFrame = frameAspect < 0.95;
   const isLandscapeFrame = frameAspect > 1.05;
-  const isGroupPhoto = photoAspect > 1.2;
 
   // Penalize orientation mismatches
   if (
     (isPortraitPhoto && isLandscapeFrame) ||
     (isLandscapePhoto && isPortraitFrame)
   ) {
-    score *= 0.01; // Severe penalty
-  }
-
-  // Check if the frame is a "feature" frame (significantly larger aspect ratio)
-  const avgAspect =
-    allFrameAspects.reduce((a, b) => a + b, 0) / allFrameAspects.length;
-  const isFeatureFrame = frameAspect > avgAspect * 1.5;
-
-  // Boost score for group photos in feature frames
-  if (isGroupPhoto && isFeatureFrame) {
-    score *= 2.0; // Strong boost
+    score *= 0.01;
   }
 
   return score;
@@ -129,7 +125,7 @@ function getScore(
 
 function assignPhotosToFrames(
   photos: Photo[],
-  frames: Array<{ id: number; aspect_ratio: number }>,
+  frames: Array<{ id: number; aspect_ratio: number; area?: number }>,
   usedPhotoIds: Set<string>
 ): Array<{ frameNumber: number; photoId: string }> | null {
   const availablePhotos = photos.filter((p) => !usedPhotoIds.has(p.id));
@@ -138,13 +134,11 @@ function assignPhotosToFrames(
   }
 
   // Create a cost matrix where cost is the inverse of the score
-  const allFrameAspects = frames.map((f) => f.aspect_ratio);
   const costs: number[][] = [];
   for (let i = 0; i < frames.length; i++) {
     costs[i] = [];
     for (let j = 0; j < availablePhotos.length; j++) {
-      costs[i][j] =
-        1 / (1 + getScore(availablePhotos[j], frames[i], allFrameAspects));
+      costs[i][j] = 1 / (1 + getScore(availablePhotos[j], frames[i]));
     }
   }
 

@@ -71,10 +71,13 @@ export default function EditMode({
 
     if (!over) return
 
+    const sourceType = active.data.current?.type
+    const overType = over.data.current?.type
+
     // Handle page reordering
-    if (active.id.toString().startsWith("page-")) {
-      const oldIndex = workingPages.findIndex((p) => p.id === active.id)
-      const newIndex = workingPages.findIndex((p) => p.id === over.id)
+    if (sourceType === "page" && overType === "page") {
+      const oldIndex = workingPages.findIndex((p) => `page-${p.id}` === active.id)
+      const newIndex = workingPages.findIndex((p) => `page-${p.id}` === over.id)
 
       if (oldIndex !== newIndex) {
         const newPages = reorderPages(workingPages, oldIndex, newIndex)
@@ -92,6 +95,43 @@ export default function EditMode({
     // Handle photo swapping/moving
     const sourceData = active.data.current
     const targetData = over.data.current
+
+    // Handle dropping a photo onto a page thumbnail
+    if (over.id.toString().startsWith("thumbnail-")) {
+      const targetPageIndex = over.data.current?.pageIndex
+      if (targetPageIndex === undefined) return
+
+      const targetPage = workingPages[targetPageIndex]
+      const firstEmptyFrameIndex = targetPage.photos.findIndex((p) => p === null)
+
+      if (firstEmptyFrameIndex === -1) {
+        toast.error("This page is full.", {
+          description: "Cannot move photo. The target page has no empty frames.",
+          duration: 3000,
+        })
+        return
+      }
+
+      const newPages = movePhotoWithLayoutAdjustment(
+        workingPages,
+        sourceData.pageIndex,
+        sourceData.frameIndex,
+        targetPageIndex,
+        firstEmptyFrameIndex,
+        photos,
+      )
+      setWorkingPages(newPages)
+      onPagesChange(newPages)
+      addEntry({
+        operation: "move_photo_to_page",
+        details: {
+          source: sourceData,
+          target: { pageIndex: targetPageIndex, frameIndex: firstEmptyFrameIndex },
+        },
+      })
+      toast.success("Photo moved to new page")
+      return
+    }
 
     console.log("[v0] Drag end - source:", sourceData, "target:", targetData)
 
@@ -170,6 +210,7 @@ export default function EditMode({
   }
 
   const totalPages = workingPages.length
+  const isDraggingPhoto = !!(draggedItem && "photoUrl" in draggedItem)
 
   const dragOverlay = draggedItem?.photoUrl ? (
     <div className="w-32 h-32 rounded-lg overflow-hidden shadow-2xl border-2 border-primary opacity-80">
@@ -209,12 +250,16 @@ export default function EditMode({
       </div>
 
       {/* Page Thumbnails */}
-      <SortableContext items={workingPages.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={workingPages.map((p) => `page-${p.id}`)}
+        strategy={verticalListSortingStrategy}
+      >
         <PageThumbnailStrip
           pages={workingPages}
           currentPage={currentPage}
           onPageSelect={onCurrentPageChange}
           isEditMode={true}
+          isDraggingPhoto={isDraggingPhoto}
         />
       </SortableContext>
 
