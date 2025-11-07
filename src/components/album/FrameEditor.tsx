@@ -38,7 +38,9 @@ export default function FrameEditor({
     isDraggingAny,
   });
 
-  const dragId = `photo-${pageIndex}-${frameIndex}`;
+  const dragId = photoUrl
+    ? `photo-${photoUrl}`
+    : `empty-frame-${pageIndex}-${frameIndex}`;
   const dropId = `frame-${pageIndex}-${frameIndex}`;
 
   const {
@@ -52,13 +54,8 @@ export default function FrameEditor({
       pageIndex,
       frameIndex,
       photoUrl,
+      type: "photo",
     },
-    disabled: !isEditMode || !photoUrl,
-  });
-
-  console.log("[v0] FrameEditor drag state:", {
-    dragId,
-    isDragging,
     disabled: !isEditMode || !photoUrl,
   });
 
@@ -68,17 +65,12 @@ export default function FrameEditor({
       pageIndex,
       frameIndex,
       photoUrl,
+      type: "frame",
     },
     disabled: !isEditMode,
   });
 
-  console.log("[v0] FrameEditor drop state:", {
-    dropId,
-    isOver,
-    disabled: !isEditMode,
-  });
-
-  const setRefs = (node: HTMLDivElement | null) => {
+  const setNodeRef = (node: HTMLElement | null) => {
     setDragRef(node);
     setDropRef(node);
   };
@@ -89,14 +81,13 @@ export default function FrameEditor({
 
   return (
     <div
-      ref={setRefs}
+      ref={setNodeRef}
       style={{
         ...style,
         zIndex: 10,
-        touchAction: "none",
       }}
-      {...attributes}
       {...listeners}
+      {...attributes}
       data-testid={`frame-editor-${pageIndex}-${frameIndex}`}
       className={cn(
         "group transition-all duration-200",
@@ -120,7 +111,10 @@ export default function FrameEditor({
           >
             <Trash2 className="h-4 w-4" />
           </Button>
-          <div className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center pointer-events-none">
+          <div
+            className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center pointer-events-auto cursor-grab"
+            style={{ touchAction: "none" }}
+          >
             <Move className="h-4 w-4" />
           </div>
         </div>
