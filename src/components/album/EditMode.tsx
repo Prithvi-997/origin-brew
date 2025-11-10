@@ -76,6 +76,9 @@ export default function EditMode({
 
     if (!over) return;
 
+    // Add this check: Do nothing if dragging onto itself
+    if (active.id === over.id) return;
+
     const sourceType = active.data.current?.type;
     const overType = over.data.current?.type;
 

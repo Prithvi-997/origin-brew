@@ -1,5 +1,9 @@
 import type { AlbumPage, Photo } from "./types";
-import { injectImagesIntoSVG, uniquifySVGIds } from "./svgUtils";
+import {
+  injectImagesIntoSVG,
+  uniquifySVGIds,
+  extractFrameCoordinates,
+} from "./svgUtils";
 
 // Import all layout SVG files
 import layout8 from "@/assets/layouts/layout8.svg?raw";
@@ -57,7 +61,11 @@ export function swapPhotos(
 
   // Extract photo IDs from current pages
   const sourcePhotoIds = extractPhotoIdsFromPage(sourcePage);
-  const targetPhotoIds = extractPhotoIdsFromPage(targetPage);
+  // FIX: If it's the same page, targetPhotoIds MUST be the same array reference
+  const targetPhotoIds =
+    sourcePageIndex === targetPageIndex
+      ? sourcePhotoIds
+      : extractPhotoIdsFromPage(targetPage);
 
   // Swap the photo IDs
   const temp = sourcePhotoIds[sourceFrameIndex];
@@ -80,14 +88,17 @@ export function swapPhotos(
     photoId: id,
   }));
 
+  const sourceSvgContent = injectImagesIntoSVG(
+    uniqueSVG,
+    sourceAssignments,
+    sourcePhotosMap
+  );
+
   newPages[sourcePageIndex] = {
     ...sourcePage,
-    svgContent: injectImagesIntoSVG(
-      uniqueSVG,
-      sourceAssignments,
-      sourcePhotosMap
-    ),
+    svgContent: sourceSvgContent,
     photoIds: sourcePhotoIds,
+    frameCoordinates: extractFrameCoordinates(sourceSvgContent), // RE-CALCULATE COORDINATES
   };
 
   if (sourcePageIndex !== targetPageIndex) {
@@ -99,14 +110,17 @@ export function swapPhotos(
       photoId: id,
     }));
 
+    const targetSvgContent = injectImagesIntoSVG(
+      targetUniqueSVG,
+      targetAssignments,
+      targetPhotosMap
+    );
+
     newPages[targetPageIndex] = {
       ...targetPage,
-      svgContent: injectImagesIntoSVG(
-        targetUniqueSVG,
-        targetAssignments,
-        targetPhotosMap
-      ),
+      svgContent: targetSvgContent,
       photoIds: targetPhotoIds,
+      frameCoordinates: extractFrameCoordinates(targetSvgContent), // RE-CALCULATE COORDINATES
     };
   }
 
@@ -142,11 +156,14 @@ export function changePageLayout(
     photoId: id,
   }));
 
+  const newSvgContent = injectImagesIntoSVG(uniqueSVG, assignments, photosMap);
+
   newPages[pageIndex] = {
     ...page,
     layoutName: newLayoutName,
-    svgContent: injectImagesIntoSVG(uniqueSVG, assignments, photosMap),
+    svgContent: newSvgContent,
     photoIds,
+    frameCoordinates: extractFrameCoordinates(newSvgContent), // RE-CALCULATE COORDINATES
   };
 
   return newPages;
@@ -212,23 +229,29 @@ export function duplicatePage(
  * Extract photo IDs from a page's SVG content
  */
 function extractPhotoIdsFromPage(page: AlbumPage): string[] {
-  // Parse SVG to extract href attributes from image tags
+  // The `photoIds` array is the source of truth for photo order.
+  // Return a copy to prevent mutation of the original page object.
+  if (page.photoIds && page.photoIds.length > 0) {
+    return [...page.photoIds];
+  }
+
+  // Fallback (e.g., for legacy data) to parse from SVG, though this is less reliable
+  // as it may not preserve the intended photo-to-frame mapping if IDs are not photo IDs.
   const parser = new DOMParser();
   const doc = parser.parseFromString(page.svgContent, "image/svg+xml");
   const images = doc.querySelectorAll("image");
 
   const photoIds: string[] = [];
   images.forEach((img) => {
+    // This is brittle. Assumes href is the photoId, which it isn't (it's a blob URL).
+    // This fallback is flawed, but the primary path (return [...page.photoIds]) is the fix.
     const href = img.getAttribute("href") || img.getAttribute("xlink:href");
     if (href) {
-      // Extract photo ID from blob URL if possible
-      // For now, use the page's photoIds if available
       photoIds.push(href);
     }
   });
 
-  // Fallback to photoIds property if available
-  return page.photoIds || photoIds;
+  return photoIds;
 }
 
 /**
@@ -278,15 +301,18 @@ export function movePhotoWithLayoutAdjustment(
     photoId: id,
   }));
 
+  const sourceSvgContent = injectImagesIntoSVG(
+    sourceUniqueSVG,
+    sourceAssignments,
+    sourcePhotosMap
+  );
+
   newPages[sourcePageIndex] = {
     ...sourcePage,
     layoutName: sourceLayoutName,
-    svgContent: injectImagesIntoSVG(
-      sourceUniqueSVG,
-      sourceAssignments,
-      sourcePhotosMap
-    ),
+    svgContent: sourceSvgContent,
     photoIds: sourcePhotoIds,
+    frameCoordinates: extractFrameCoordinates(sourceSvgContent), // RE-CALCULATE COORDINATES
   };
 
   // Regenerate target page with new layout
@@ -298,15 +324,18 @@ export function movePhotoWithLayoutAdjustment(
     photoId: id,
   }));
 
+  const targetSvgContent = injectImagesIntoSVG(
+    targetUniqueSVG,
+    targetAssignments,
+    targetPhotosMap
+  );
+
   newPages[targetPageIndex] = {
     ...targetPage,
     layoutName: targetLayoutName,
-    svgContent: injectImagesIntoSVG(
-      targetUniqueSVG,
-      targetAssignments,
-      targetPhotosMap
-    ),
+    svgContent: targetSvgContent,
     photoIds: targetPhotoIds,
+    frameCoordinates: extractFrameCoordinates(targetSvgContent), // RE-CALCULATE COORDINATES
   };
 
   return newPages;
@@ -334,7 +363,15 @@ function findLayoutForFrameCount(frameCount: number): string {
 
   const availableLayouts = layoutsByFrameCount[frameCount];
   if (!availableLayouts || availableLayouts.length === 0) {
-    return "layout11.svg";
+    // Fallback to the closest available layout count if exact match not found
+    const closestCount = Object.keys(layoutsByFrameCount)
+      .map(Number)
+      .reduce((prev, curr) =>
+        Math.abs(curr - frameCount) < Math.abs(prev - frameCount) ? curr : prev
+      );
+    return layoutsByFrameCount[
+      closestCount as keyof typeof layoutsByFrameCount
+    ][0];
   }
 
   return availableLayouts[0];
@@ -443,7 +480,7 @@ const layoutMetadata: Record<
   "layout21.svg": { slots: 2, orientations: ["landscape", "landscape"] },
   "layout22.svg": {
     slots: 3,
-    orientations: ["portrait", "portrait", "portrait"],
+    orientations: ["landscape", "portrait", "portrait"],
   },
   "layout23.svg": {
     slots: 3,
@@ -451,7 +488,7 @@ const layoutMetadata: Record<
   },
   "layout24.svg": {
     slots: 3,
-    orientations: ["portrait", "portrait", "portrait"],
+    orientations: ["portrait", "landscape", "landscape"],
   },
 };
 
@@ -464,6 +501,10 @@ function findBestLayout(photos: Photo[]): string {
   if (frameCount < 1) {
     console.log("[v0] No photos, using layout19.svg");
     return "layout19.svg";
+  }
+  if (frameCount > 6) {
+    console.log(`[v0] Too many photos (${frameCount}), using layout17.svg`);
+    return "layout17.svg"; // Fallback for too many photos
   }
 
   const photoOrientations = photos.map((p) => p.orientation);
@@ -484,14 +525,18 @@ function findBestLayout(photos: Photo[]): string {
     6: ["layout17.svg", "layout18.svg"],
   };
 
-  const availableLayouts = layoutsByFrameCount[frameCount];
+  const availableLayouts =
+    layoutsByFrameCount[frameCount as keyof typeof layoutsByFrameCount];
   if (!availableLayouts || availableLayouts.length === 0) {
+    // This should not be reachable due to the frameCount < 1 and > 6 checks, but as a safeguard:
     const closestCount = Object.keys(layoutsByFrameCount)
       .map(Number)
       .reduce((prev, curr) =>
         Math.abs(curr - frameCount) < Math.abs(prev - frameCount) ? curr : prev
       );
-    return layoutsByFrameCount[closestCount][0];
+    return layoutsByFrameCount[
+      closestCount as keyof typeof layoutsByFrameCount
+    ][0];
   }
 
   let bestLayout = availableLayouts[0];

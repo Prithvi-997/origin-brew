@@ -271,10 +271,8 @@ const Album = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div
-        className={`container mx-auto px-6 py-8 ${isEditMode ? "pb-32" : ""}`}
-      >
+      {/* Main Content - Removed container and mx-auto */}
+      <div className={`px-6 py-8 ${isEditMode ? "pb-32" : ""}`}>
         {isEditMode ? (
           <EditMode
             pages={pages}

@@ -38,9 +38,6 @@ export default function FrameEditor({
     isDraggingAny,
   });
 
-  const dragId = photoUrl
-    ? `photo-${photoUrl}`
-    : `empty-frame-${pageIndex}-${frameIndex}`;
   const dropId = `frame-${pageIndex}-${frameIndex}`;
 
   const {
@@ -49,7 +46,7 @@ export default function FrameEditor({
     setNodeRef: setDragRef,
     isDragging,
   } = useDraggable({
-    id: dragId,
+    id: frameId, // FIX: Use the stable frameId for dragging, not the photoUrl
     data: {
       pageIndex,
       frameIndex,
@@ -59,18 +56,29 @@ export default function FrameEditor({
     disabled: !isEditMode || !photoUrl,
   });
 
+  console.log("[v0] FrameEditor drag state:", {
+    dragId: frameId,
+    isDragging,
+    disabled: !isEditMode || !photoUrl,
+  });
+
   const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: dropId,
     data: {
       pageIndex,
       frameIndex,
       photoUrl,
-      type: "frame",
     },
     disabled: !isEditMode,
   });
 
-  const setNodeRef = (node: HTMLElement | null) => {
+  console.log("[v0] FrameEditor drop state:", {
+    dropId,
+    isOver,
+    disabled: !isEditMode,
+  });
+
+  const setRefs = (node: HTMLDivElement | null) => {
     setDragRef(node);
     setDropRef(node);
   };
@@ -81,13 +89,14 @@ export default function FrameEditor({
 
   return (
     <div
-      ref={setNodeRef}
+      ref={setRefs}
       style={{
         ...style,
         zIndex: 10,
+        touchAction: "none",
       }}
-      {...listeners}
       {...attributes}
+      {...listeners}
       data-testid={`frame-editor-${pageIndex}-${frameIndex}`}
       className={cn(
         "group transition-all duration-200",
@@ -111,10 +120,7 @@ export default function FrameEditor({
           >
             <Trash2 className="h-4 w-4" />
           </Button>
-          <div
-            className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center pointer-events-auto cursor-grab"
-            style={{ touchAction: "none" }}
-          >
+          <div className="h-8 w-8 rounded-md bg-secondary flex items-center justify-center pointer-events-none">
             <Move className="h-4 w-4" />
           </div>
         </div>

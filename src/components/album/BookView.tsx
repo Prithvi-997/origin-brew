@@ -60,31 +60,24 @@ const BookView = ({
             />
             {isEditMode &&
               leftPage.frameCoordinates &&
-              leftPage.frameCoordinates.map((frame, frameIndex) => {
-                const photoUrl = leftPage.photoIds?.[frameIndex];
-                return (
-                  <FrameEditor
-                    key={
-                      photoUrl
-                        ? `photo-${photoUrl}`
-                        : `frame-${pageStartIndex}-${frameIndex}`
-                    }
-                    frameId={`frame-${pageStartIndex}-${frameIndex}`}
-                    pageIndex={pageStartIndex}
-                    frameIndex={frameIndex}
-                    photoUrl={leftPage.photoIds?.[frameIndex]}
-                    isEditMode={isEditMode}
-                    style={{
-                      position: "absolute",
-                      left: `${frame.x}%`,
-                      top: `${frame.y}%`,
-                      width: `${frame.width}%`,
-                      height: `${frame.height}%`,
-                    }}
-                    isDraggingAny={isDraggingAny}
-                  />
-                );
-              })}
+              leftPage.frameCoordinates.map((frame, frameIndex) => (
+                <FrameEditor
+                  key={`frame-${pageStartIndex}-${frameIndex}`}
+                  frameId={`frame-${pageStartIndex}-${frameIndex}`}
+                  pageIndex={pageStartIndex}
+                  frameIndex={frameIndex}
+                  photoUrl={leftPage.photoIds?.[frameIndex]}
+                  isEditMode={isEditMode}
+                  style={{
+                    position: "absolute",
+                    left: `${frame.x}px`, // FIX: Use px instead of %
+                    top: `${frame.y}px`, // FIX: Use px instead of %
+                    width: `${frame.width}px`, // FIX: Use px instead of %
+                    height: `${frame.height}px`, // FIX: Use px instead of %
+                  }}
+                  isDraggingAny={isDraggingAny}
+                />
+              ))}
             <PageDropZone pageIndex={pageStartIndex} isEditMode={isEditMode} />
           </>
         )}
@@ -111,35 +104,24 @@ const BookView = ({
             />
             {isEditMode &&
               rightPage.frameCoordinates &&
-              rightPage.frameCoordinates.map((frame, frameIndex) => {
-                const photoUrl = rightPage.photoIds?.[frameIndex];
-                return (
-                  <FrameEditor
-                    key={
-                      photoUrl
-                        ? `photo-${photoUrl}`
-                        : `frame-${pageStartIndex + 1}-${frameIndex}`
-                    }
-                    frameId={`frame-${pageStartIndex + 1}-${frameIndex}`}
-                    pageIndex={pageStartIndex + 1}
-                    frameIndex={frameIndex}
-                    photoUrl={rightPage.photoIds?.[frameIndex]}
-                    isEditMode={isEditMode}
-                    style={{
-                      position: "absolute",
-                      left: `${frame.x}%`,
-                      top: `${frame.y}%`,
-                      width: `${frame.width}%`,
-                      height: `${frame.height}%`,
-                    }}
-                    isDraggingAny={isDraggingAny}
-                  />
-                );
-              })}
-            <PageDropZone
-              pageIndex={pageStartIndex + 1}
-              isEditMode={isEditMode}
-            />
+              rightPage.frameCoordinates.map((frame, frameIndex) => (
+                <FrameEditor
+                  key={`frame-${pageStartIndex + 1}-${frameIndex}`}
+                  frameId={`frame-${pageStartIndex + 1}-${frameIndex}`}
+                  pageIndex={pageStartIndex + 1}
+                  frameIndex={frameIndex}
+                  photoUrl={rightPage.photoIds?.[frameIndex]}
+                  isEditMode={isEditMode}
+                  style={{
+                    position: "absolute",
+                    left: `${frame.x}px`, // FIX: Use px instead of %
+                    top: `${frame.y}px`, // FIX: Use px instead of %
+                    width: `${frame.width}px`, // FIX: Use px instead of %
+                    height: `${frame.height}px`, // FIX: Use px instead of %
+                  }}
+                  isDraggingAny={isDraggingAny}
+                />
+              ))}
             <PageDropZone
               pageIndex={pageStartIndex + 1}
               isEditMode={isEditMode}
