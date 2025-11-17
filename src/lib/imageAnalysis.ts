@@ -1,5 +1,8 @@
-import { pico } from "@kizmann/pico-js";
+
+import "./pico.js";
 import { Photo } from "./types";
+
+declare const pico: any;
 
 let facefinder_classify_region: any = null;
 
@@ -7,7 +10,7 @@ const loadCascade = async () => {
   if (facefinder_classify_region) {
     return;
   }
-  const response = await fetch("/src/lib/facefinder");
+  const response = await fetch("/facefinder");
   const buffer = await response.arrayBuffer();
   const bytes = new Int8Array(buffer);
   facefinder_classify_region = pico.unpack_cascade(bytes);
@@ -60,8 +63,8 @@ export const detectFaces = async (img: HTMLImageElement) => {
   dets = pico.cluster_detections(dets, 0.2);
 
   const faces = dets
-    .filter((det) => det[3] > 50.0)
-    .map((det) => ({
+    .filter((det: any) => det[3] > 50.0)
+    .map((det: any) => ({
       x: det[1],
       y: det[0],
       width: det[2],
