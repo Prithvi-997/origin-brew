@@ -7,6 +7,7 @@ export interface Photo {
   aspectRatio?: number;
   orientation?: "landscape" | "portrait" | "square";
   priority?: number; // For AI to determine hero images
+  faces?: { x: number; y: number; width: number; height: number }[];
 }
 
 export interface Album {
