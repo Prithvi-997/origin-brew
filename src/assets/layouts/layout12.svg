@@ -1,60 +1,65 @@
-<svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
+<svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
   <defs>
     <!-- FRAME 1: Top Left -->
     <clipPath id="clip1">
-      <path d="M20 24 H172 V184 H20 Z"/>
+      <path d="M0 0 H156 V178 H0 Z"/>
     </clipPath>
-    <pattern id="img1" patternUnits="userSpaceOnUse" x="20" y="24" width="152" height="160">
-      <image href="" preserveAspectRatio="xMidYMid meet" x="0" y="0" width="152" height="160" />
+    <!-- Updated pattern to use slice instead of meet for better fill -->
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="0" y="0" width="156" height="178">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="156" height="178" />
     </pattern>
 
     <!-- FRAME 2: Top Center -->
     <clipPath id="clip2">
-      <path d="M177 24 H327 V184 H177 Z"/>
+      <path d="M160 0 H318 V178 H160 Z"/>
     </clipPath>
-    <pattern id="img2" patternUnits="userSpaceOnUse" x="177" y="24" width="150" height="160">
-      <image href="" preserveAspectRatio="xMidYMid meet" x="0" y="0" width="150" height="160" />
+    <!-- Updated pattern to use slice instead of meet for better fill -->
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="160" y="0" width="158" height="178">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="158" height="178" />
     </pattern>
 
     <!-- FRAME 3: Top Right -->
     <clipPath id="clip3">
-      <path d="M332 24 H480 V184 H332 Z"/>
+      <path d="M322 0 H480 V178 H322 Z"/>
     </clipPath>
-    <pattern id="img3" patternUnits="userSpaceOnUse" x="332" y="24" width="148" height="160">
-      <image href="" preserveAspectRatio="xMidYMid meet" x="0" y="0" width="148" height="160" />
+    <!-- Updated pattern to use slice instead of meet for better fill -->
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="322" y="0" width="158" height="178">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="158" height="178" />
     </pattern>
 
     <!-- FRAME 4: Bottom Left -->
     <clipPath id="clip4">
-      <path d="M20 189 H248 V407 H20 Z"/>
+      <path d="M0 182 H238 V540 H0 Z"/>
     </clipPath>
-    <pattern id="img4" patternUnits="userSpaceOnUse" x="20" y="189" width="228" height="218">
-      <image href="" preserveAspectRatio="xMidYMid meet" x="0" y="0" width="228" height="218" />
+    <!-- Updated pattern to use slice instead of meet for better fill -->
+    <pattern id="img4" patternUnits="userSpaceOnUse" x="0" y="182" width="238" height="358">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="238" height="358" />
     </pattern>
 
     <!-- FRAME 5: Bottom Right -->
     <clipPath id="clip5">
-      <path d="M253 189 H480 V407 H253 Z"/>
+      <path d="M242 182 H480 V540 H242 Z"/>
     </clipPath>
-    <pattern id="img5" patternUnits="userSpaceOnUse" x="253" y="189" width="227" height="218">
-      <image href="" preserveAspectRatio="xMidYMid meet" x="0" y="0" width="227" height="218" />
+    <!-- Updated pattern to use slice instead of meet for better fill -->
+    <pattern id="img5" patternUnits="userSpaceOnUse" x="242" y="182" width="238" height="358">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="238" height="358" />
     </pattern>
   </defs>
 
   <!-- Background color of the page -->
-  <rect width="500" height="600" fill="#f5f5f5"/>
+  <rect width="480" height="540" fill="#f5f5f5"/>
 
   <!-- Photo Frames -->
   <g>
     <!-- Frame 1 -->
-    <path d="M20 24 H172 V184 H20 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+    <path d="M0 0 H156 V178 H0 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
     <!-- Frame 2 -->
-    <path d="M177 24 H327 V184 H177 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+    <path d="M160 0 H318 V178 H160 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
     <!-- Frame 3 -->
-    <path d="M332 24 H480 V184 H332 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+    <path d="M322 0 H480 V178 H322 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
     <!-- Frame 4 -->
-    <path d="M20 189 H248 V407 H20 Z" fill="url(#img4)" clip-path="url(#clip4)" data-photo-frame="4" />
+    <path d="M0 182 H238 V540 H0 Z" fill="url(#img4)" clip-path="url(#clip4)" data-photo-frame="4" />
     <!-- Frame 5 -->
-    <path d="M253 189 H480 V407 H253 Z" fill="url(#img5)" clip-path="url(#clip5)" data-photo-frame="5" />
+    <path d="M242 182 H480 V540 H242 Z" fill="url(#img5)" clip-path="url(#clip5)" data-photo-frame="5" />
   </g>
 </svg>

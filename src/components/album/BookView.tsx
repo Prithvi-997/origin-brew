@@ -1,6 +1,10 @@
-import { AlbumPage } from "@/lib/types";
+"use client";
+
+import type { AlbumPage } from "@/lib/types";
 import FrameEditor from "./FrameEditor";
 import PageDropZone from "./PageDropZone";
+import React from "react";
+
 interface BookViewProps {
   pages: AlbumPage[];
   isEditMode?: boolean;
@@ -18,36 +22,26 @@ const BookView = ({
 }: BookViewProps) => {
   const leftPage = pages[0];
   const rightPage = pages[1];
-
-  console.log("[v0] BookView render:", {
-    pageStartIndex,
-    isEditMode,
-    isDraggingAny,
-    dragSourcePageIndex,
-    leftPageFrameCount: leftPage?.frameCoordinates?.length || 0,
-    rightPageFrameCount: rightPage?.frameCoordinates?.length || 0,
-    leftPageLayout: leftPage?.layoutName,
-    rightPageLayout: rightPage?.layoutName,
-  });
-
-  if (leftPage?.frameCoordinates) {
-    console.log("[v0] Left page frame coordinates:", leftPage.frameCoordinates);
-  }
-  if (rightPage?.frameCoordinates) {
-    console.log(
-      "[v0] Right page frame coordinates:",
-      rightPage.frameCoordinates
-    );
-  }
+  const pageRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex justify-center items-start gap-1">
+    <div
+      className={`flex justify-center items-stretch gap-4 w-full ${
+        isEditMode ? "aspect-[16/8.7]" : "aspect-[16/8.7]"
+      }`}
+    >
       {/* Left Page */}
-      <div className="w-[500px] h-[600px] rounded-l-lg border bg-white shadow-2xl overflow-hidden relative group">
+      <div
+        ref={pageRef}
+        className="flex flex-col flex-1 max-w-[50vw] h-full rounded-l-lg border bg-white shadow-2xl overflow-hidden relative group"
+      >
         {leftPage && (
           <>
             <div className="absolute inset-0 bg-white" style={{ zIndex: 0 }} />
             <div
+              className={`flex-1 ${
+                isEditMode ? "[&_*]:pointer-events-none" : ""
+              }`}
               dangerouslySetInnerHTML={{ __html: leftPage.svgContent }}
               style={{
                 width: "100%",
@@ -56,7 +50,6 @@ const BookView = ({
                 position: "relative",
                 zIndex: 1,
               }}
-              className={isEditMode ? "[&_*]:pointer-events-none" : ""}
             />
             {isEditMode &&
               leftPage.frameCoordinates &&
@@ -70,10 +63,10 @@ const BookView = ({
                   isEditMode={isEditMode}
                   style={{
                     position: "absolute",
-                    left: `${frame.x}px`, // FIX: Use px instead of %
-                    top: `${frame.y}px`, // FIX: Use px instead of %
-                    width: `${frame.width}px`, // FIX: Use px instead of %
-                    height: `${frame.height}px`, // FIX: Use px instead of %
+                    left: `${(frame.x / 480) * 100}%`,
+                    top: `${(frame.y / 540) * 100}%`,
+                    width: `${(frame.width / 480) * 100}%`,
+                    height: `${(frame.height / 540) * 100}%`,
                   }}
                   isDraggingAny={isDraggingAny}
                 />
@@ -84,14 +77,17 @@ const BookView = ({
       </div>
 
       {/* Book Spine/Center */}
-      <div className="w-4 h-[600px] bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300 shadow-inner" />
+      <div className="w-4 h-full bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300 shadow-inner" />
 
       {/* Right Page */}
-      <div className="w-[500px] h-[600px] rounded-r-lg border bg-white shadow-2xl overflow-hidden relative group">
+      <div className="flex flex-col flex-1 max-w-[50vw] h-full rounded-r-lg border bg-white shadow-2xl overflow-hidden relative group">
         {rightPage && (
           <>
             <div className="absolute inset-0 bg-white" style={{ zIndex: 0 }} />
             <div
+              className={`flex-1 ${
+                isEditMode ? "[&_*]:pointer-events-none" : ""
+              }`}
               dangerouslySetInnerHTML={{ __html: rightPage.svgContent }}
               style={{
                 width: "100%",
@@ -100,7 +96,6 @@ const BookView = ({
                 position: "relative",
                 zIndex: 1,
               }}
-              className={isEditMode ? "[&_*]:pointer-events-none" : ""}
             />
             {isEditMode &&
               rightPage.frameCoordinates &&
@@ -114,10 +109,10 @@ const BookView = ({
                   isEditMode={isEditMode}
                   style={{
                     position: "absolute",
-                    left: `${frame.x}px`, // FIX: Use px instead of %
-                    top: `${frame.y}px`, // FIX: Use px instead of %
-                    width: `${frame.width}px`, // FIX: Use px instead of %
-                    height: `${frame.height}px`, // FIX: Use px instead of %
+                    left: `${(frame.x / 480) * 100}%`,
+                    top: `${(frame.y / 540) * 100}%`,
+                    width: `${(frame.width / 480) * 100}%`,
+                    height: `${(frame.height / 540) * 100}%`,
                   }}
                   isDraggingAny={isDraggingAny}
                 />

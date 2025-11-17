@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { AlbumPage, Photo } from "@/lib/types";
+import type { AlbumPage, Photo } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Save, X, Undo2, Redo2, Pencil } from "lucide-react";
 import { toast } from "sonner";
@@ -13,7 +15,7 @@ import {
   reorderPages,
   movePhotoWithLayoutAdjustment,
 } from "@/lib/editOperations";
-import { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -240,23 +242,26 @@ export default function EditMode({
         />
       </SortableContext>
 
+      {/* Proper scaling container added to minimize layouts in edit mode */}
       <ScrollArea className="h-[calc(100vh-220px)] scroll-area-viewport">
-        <div className="space-y-8 pb-8" data-testid="album-editor">
-          {Array.from({ length: Math.ceil(totalPages / 2) }, (_, i) => {
-            const leftPage = workingPages[i * 2];
-            const rightPage = workingPages[i * 2 + 1];
-            return (
-              <div key={i} className="scroll-snap-start">
-                <BookView
-                  pages={[leftPage, rightPage].filter(Boolean)}
-                  isEditMode={true}
-                  pageStartIndex={i * 2}
-                  isDraggingAny={!!draggedItem}
-                  dragSourcePageIndex={draggedItem?.pageIndex ?? -1}
-                />
-              </div>
-            );
-          })}
+        <div className="flex justify-center items-start py-8">
+          <div className="w-[80%] max-w-[1200px] space-y-8">
+            {Array.from({ length: Math.ceil(totalPages / 2) }, (_, i) => {
+              const leftPage = workingPages[i * 2];
+              const rightPage = workingPages[i * 2 + 1];
+              return (
+                <div key={i} className="scroll-snap-start">
+                  <BookView
+                    pages={[leftPage, rightPage].filter(Boolean)}
+                    isEditMode={true}
+                    pageStartIndex={i * 2}
+                    isDraggingAny={!!draggedItem}
+                    dragSourcePageIndex={draggedItem?.pageIndex ?? -1}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </ScrollArea>
     </DragDropProvider>

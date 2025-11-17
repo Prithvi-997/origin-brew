@@ -198,7 +198,7 @@ const Album = () => {
 
       {/* Top Bar */}
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -271,8 +271,8 @@ const Album = () => {
         </div>
       </div>
 
-      {/* Main Content - Removed container and mx-auto */}
-      <div className={`px-6 py-8 ${isEditMode ? "pb-32" : ""}`}>
+      {/* Main Content */}
+      <div className={`${isEditMode ? "pb-32" : ""}`}>
         {isEditMode ? (
           <EditMode
             pages={pages}
@@ -286,7 +286,7 @@ const Album = () => {
           />
         ) : (
           <ScrollArea className="h-[calc(100vh-220px)]">
-            <div className="space-y-8 pb-8">
+            <div className="space-y-8">
               {viewMode === "single"
                 ? pages.map((page, index) => (
                     <div key={index} className="scroll-snap-start">

@@ -1,4 +1,4 @@
-import { AlbumPage } from "@/lib/types";
+import type { AlbumPage } from "@/lib/types";
 import FrameEditor from "@/components/album/FrameEditor";
 import PageDropZone from "@/components/album/PageDropZone";
 interface SinglePageViewProps {
@@ -17,8 +17,8 @@ const SinglePageView = ({
   const page = pages[0];
 
   return (
-    <div className="flex justify-center">
-      <div className="bg-white rounded-lg shadow-2xl overflow-hidden relative group w-full max-w-xl aspect-[5/6] mx-auto">
+    <div className="flex justify-center w-full aspect-[8/9] mb-8">
+      <div className="bg-white rounded-lg shadow-2xl overflow-hidden relative group w-full h-full">
         <div
           dangerouslySetInnerHTML={{ __html: page.svgContent }}
           style={{ width: "100%", height: "100%" }}
@@ -35,10 +35,10 @@ const SinglePageView = ({
               isEditMode={isEditMode}
               style={{
                 position: "absolute",
-                left: `${frame.x}px`,
-                top: `${frame.y}px`,
-                width: `${frame.width}px`,
-                height: `${frame.height}px`,
+                left: `${(frame.x / 480) * 100}%`,
+                top: `${(frame.y / 540) * 100}%`,
+                width: `${(frame.width / 480) * 100}%`,
+                height: `${(frame.height / 540) * 100}%`,
               }}
             />
           ))}

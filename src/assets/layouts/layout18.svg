@@ -1,35 +1,36 @@
-<svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
+<svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
   <defs>
-    <pattern id="img1" patternUnits="userSpaceOnUse" x="12" y="15" width="240" height="555">
-      <image href="" x="0" y="0" width="240" height="555" preserveAspectRatio="xMidYMid meet" />
+    <!-- Converted from 500x600 to 480x540 viewBox -->
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="0" y="0" width="236.16" height="540">
+      <image href="" x="0" y="0" width="236.16" height="540" preserveAspectRatio="xMidYMid meet" />
     </pattern>
-    <clipPath id="clip1"><path d="M12 15 h240 v555 h-240 Z" /></clipPath>
-    <pattern id="img2" patternUnits="userSpaceOnUse" x="257" y="15" width="115" height="172">
-      <image href="" x="0" y="0" width="115" height="172" preserveAspectRatio="xMidYMid meet" />
+    <clipPath id="clip1"><path d="M0 0 h236.16 v540 h-236.16 Z" /></clipPath>
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="240" y="0" width="119.04" height="172.8">
+      <image href="" x="0" y="0" width="119.04" height="172.8" preserveAspectRatio="xMidYMid meet" />
     </pattern>
-    <clipPath id="clip2"><path d="M257 15 h115 v172 h-115 Z" /></clipPath>
-    <pattern id="img3" patternUnits="userSpaceOnUse" x="377" y="15" width="110" height="172">
-      <image href="" x="0" y="0" width="110" height="172" preserveAspectRatio="xMidYMid meet" />
+    <clipPath id="clip2"><path d="M240 0 h119.04 v172.8 h-119.04 Z" /></clipPath>
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="362.88" y="0" width="117.12" height="172.8">
+      <image href="" x="0" y="0" width="117.12" height="172.8" preserveAspectRatio="xMidYMid meet" />
     </pattern>
-    <clipPath id="clip3"><path d="M377 15 h110 v172 h-110 Z" /></clipPath>
-    <pattern id="img4" patternUnits="userSpaceOnUse" x="257" y="192" width="230" height="185">
-      <image href="" x="0" y="0" width="230" height="185" preserveAspectRatio="xMidYMid meet" />
+    <clipPath id="clip3"><path d="M362.88 0 h117.12 v172.8 h-117.12 Z" /></clipPath>
+    <pattern id="img4" patternUnits="userSpaceOnUse" x="240" y="176.4" width="240" height="183.6">
+      <image href="" x="0" y="0" width="240" height="183.6" preserveAspectRatio="xMidYMid meet" />
     </pattern>
-    <clipPath id="clip4"><path d="M257 192 h230 v185 h-230 Z" /></clipPath>
-    <pattern id="img5" patternUnits="userSpaceOnUse" x="257" y="382" width="115" height="188">
-      <image href="" x="0" y="0" width="115" height="188" preserveAspectRatio="xMidYMid meet" />
+    <clipPath id="clip4"><path d="M240 176.4 h240 v183.6 h-240 Z" /></clipPath>
+    <pattern id="img5" patternUnits="userSpaceOnUse" x="240" y="363.6" width="119.04" height="176.4">
+      <image href="" x="0" y="0" width="119.04" height="176.4" preserveAspectRatio="xMidYMid meet" />
     </pattern>
-    <clipPath id="clip5"><path d="M257 382 h115 v188 h-115 Z" /></clipPath>
-    <pattern id="img6" patternUnits="userSpaceOnUse" x="377" y="382" width="110" height="188">
-      <image href="" x="0" y="0" width="110" height="188" preserveAspectRatio="xMidYMid meet" />
+    <clipPath id="clip5"><path d="M240 363.6 h119.04 v176.4 h-119.04 Z" /></clipPath>
+    <pattern id="img6" patternUnits="userSpaceOnUse" x="362.88" y="363.6" width="117.12" height="176.4">
+      <image href="" x="0" y="0" width="117.12" height="176.4" preserveAspectRatio="xMidYMid meet" />
     </pattern>
-    <clipPath id="clip6"><path d="M377 382 h110 v188 h-110 Z" /></clipPath>
+    <clipPath id="clip6"><path d="M362.88 363.6 h117.12 v176.4 h-117.12 Z" /></clipPath>
   </defs>
-  <rect width="500" height="600" fill="#f5f5f5" />
-  <rect x="12" y="15" width="240" height="555" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
-  <rect x="257" y="15" width="115" height="172" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
-  <rect x="377" y="15" width="110" height="172" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
-  <rect x="257" y="192" width="230" height="185" fill="url(#img4)" clip-path="url(#clip4)" data-photo-frame="4" />
-  <rect x="257" y="382" width="115" height="188" fill="url(#img5)" clip-path="url(#clip5)" data-photo-frame="5" />
-  <rect x="377" y="382" width="110" height="188" fill="url(#img6)" clip-path="url(#clip6)" data-photo-frame="6" />
+  <rect width="480" height="540" fill="#f5f5f5" />
+  <rect x="0" y="0" width="236.16" height="540" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+  <rect x="240" y="0" width="119.04" height="172.8" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+  <rect x="362.88" y="0" width="117.12" height="172.8" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+  <rect x="240" y="176.4" width="240" height="183.6" fill="url(#img4)" clip-path="url(#clip4)" data-photo-frame="4" />
+  <rect x="240" y="363.6" width="119.04" height="176.4" fill="url(#img5)" clip-path="url(#clip5)" data-photo-frame="5" />
+  <rect x="362.88" y="363.6" width="117.12" height="176.4" fill="url(#img6)" clip-path="url(#clip6)" data-photo-frame="6" />
 </svg>

@@ -1,38 +1,33 @@
-<svg width="500" height="600" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet">
+<svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none">
   <defs>
-    <!-- Redesigned as proper 3-image layout: 1 large landscape + 2 smaller portraits -->
-    <!-- FRAME 1: Large Landscape Top -->
+    <!-- Converted viewBox from 500x600 to 480x540 and scaled coordinates -->
     <clipPath id="clip1">
-      <path d="M10 10 H490 V310 H10 Z"/>
+      <path d="M0 0 H480 V291 H0 Z"/>
     </clipPath>
-    <pattern id="img1" patternUnits="userSpaceOnUse" x="10" y="10" width="480" height="300">
-      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="480" height="300" />
+    <pattern id="img1" patternUnits="userSpaceOnUse" x="0" y="0" width="480" height="291">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="480" height="291" />
     </pattern>
 
-    <!-- FRAME 2: Bottom Left Portrait -->
     <clipPath id="clip2">
-      <path d="M10 320 H245 V590 H10 Z"/>
+      <path d="M0 295 H238 V540 H0 Z"/>
     </clipPath>
-    <pattern id="img2" patternUnits="userSpaceOnUse" x="10" y="320" width="235" height="270">
-      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="235" height="270" />
+    <pattern id="img2" patternUnits="userSpaceOnUse" x="0" y="295" width="238" height="245">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="238" height="245" />
     </pattern>
 
-    <!-- FRAME 3: Bottom Right Portrait -->
     <clipPath id="clip3">
-      <path d="M255 320 H490 V590 H255 Z"/>
+      <path d="M242 295 H480 V540 H242 Z"/>
     </clipPath>
-    <pattern id="img3" patternUnits="userSpaceOnUse" x="255" y="320" width="235" height="270">
-      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="235" height="270" />
+    <pattern id="img3" patternUnits="userSpaceOnUse" x="242" y="295" width="238" height="245">
+      <image href="" preserveAspectRatio="xMidYMid slice" x="0" y="0" width="238" height="245" />
     </pattern>
   </defs>
 
-  <!-- Background -->
-  <rect width="500" height="600" fill="#f4f4f4"/>
+  <rect width="480" height="540" fill="#f4f4f4"/>
 
-  <!-- Photo Frames -->
   <g>
-    <path d="M10 10 H490 V310 H10 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
-    <path d="M10 320 H245 V590 H10 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
-    <path d="M255 320 H490 V590 H255 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
+    <path d="M0 0 H480 V291 H0 Z" fill="url(#img1)" clip-path="url(#clip1)" data-photo-frame="1" />
+    <path d="M0 295 H238 V540 H0 Z" fill="url(#img2)" clip-path="url(#clip2)" data-photo-frame="2" />
+    <path d="M242 295 H480 V540 H242 Z" fill="url(#img3)" clip-path="url(#clip3)" data-photo-frame="3" />
   </g>
 </svg>
