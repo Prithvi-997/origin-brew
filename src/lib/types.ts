@@ -46,7 +46,6 @@ export interface LayoutMetadata {
   visualImpact?: "dramatic" | "balanced" | "subtle";
 }
 
-
 export interface EditHistoryEntry {
   id: string;
   timestamp: Date;
