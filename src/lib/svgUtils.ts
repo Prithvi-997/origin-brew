@@ -1,59 +1,15 @@
 import type { Photo, FrameCoordinates } from "./types";
 
-const calculateViewBox = (
-  photo: Photo,
-  frameWidth: number,
-  frameHeight: number
-) => {
-  if (!photo.width || !photo.height) {
-    return "0 0 1 1";
-  }
-
-  const frameAspect = frameWidth / frameHeight;
-  const photoAspect = photo.width / photo.height;
-
-  if (!photo.faces || photo.faces.length === 0) {
-    // No faces detected, so we'll just center the image
-    let newWidth;
-    let newHeight;
-    if (photoAspect > frameAspect) {
-      newHeight = photo.height;
-      newWidth = photo.height * frameAspect;
-    } else {
-      newWidth = photo.width;
-      newHeight = photo.width / frameAspect;
-    }
-    const x = (photo.width - newWidth) / 2;
-    const y = (photo.height - newHeight) / 2;
-    return `${x} ${y} ${newWidth} ${newHeight}`;
-  }
-
-  // Faces detected, so we'll try to fit them all in the frame
-  const minX = Math.min(...photo.faces.map((face) => face.x));
-  const maxX = Math.max(...photo.faces.map((face) => face.x + face.width));
-  const minY = Math.min(...photo.faces.map((face) => face.y));
-  const maxY = Math.max(...photo.faces.map((face) => face.y + face.height));
-
-  const facesWidth = maxX - minX;
-  const facesHeight = maxY - minY;
-  const facesCenterX = minX + facesWidth / 2;
-  const facesCenterY = minY + facesHeight / 2;
-
-  let newWidth;
-  let newHeight;
-  if (facesWidth / facesHeight > frameAspect) {
-    newHeight = facesHeight * 1.5;
-    newWidth = newHeight * frameAspect;
-  } else {
-    newWidth = facesWidth * 1.5;
-    newHeight = newWidth / frameAspect;
-  }
-
-  const x = Math.max(0, facesCenterX - newWidth / 2);
-  const y = Math.max(0, facesCenterY - newHeight / 2);
-
-  return `${x} ${y} ${newWidth} ${newHeight}`;
-};
+/**
+ * Determines optimal preserveAspectRatio to fill frame completely
+ * Uses 'slice' to crop image to fill frame - perfect for photo albums
+ */
+function getOptimalPreserveAspectRatio(
+  photoAspect: number,
+  frameAspect: number
+): string {
+  return "xMidYMid slice";
+}
 
 /**
  * Makes all IDs in an SVG unique by appending a suffix
@@ -173,16 +129,12 @@ export function injectImagesIntoSVG(
         photo.url
       );
 
-      const frameWidth = Number(pattern.getAttribute("width"));
-      const frameHeight = Number(pattern.getAttribute("height"));
-      const viewBox = calculateViewBox(photo, frameWidth, frameHeight);
-      pattern.setAttribute("viewBox", viewBox);
-      imageEl.setAttribute("preserveAspectRatio", "xMidYMid slice");
-
       console.log(
         `[v0] Injected image into frame ${assignment.frameNumber}:`,
         photo.url.substring(0, 50)
       );
+
+      imageEl.setAttribute("preserveAspectRatio", "xMidYMid slice");
     } else {
       console.warn(
         `[v0] No image element in pattern for frame ${assignment.frameNumber}`
